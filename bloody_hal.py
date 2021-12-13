@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/9/2021
+Updated: 12/12/2021
 
 Version: 1.0.1
 
@@ -16,7 +16,7 @@ Purpose:
     -Voice Recognition, speech to text, API calls, and other methods of searching the internet for information are used in order to
         answer questions and provide information to the user.
     -This script / tool also is intended to be vulgar (ability to turn it off in the config file)
-    -"Hal" is the wake word used and the name of this AI. It is a play on the computer system in '2000, A Space Odysee'
+    -"Harold" is the wake word used and the name of this AI. It is a play on the computer system in '2000, A Space Odysee'
 
 
 Considerations:
@@ -36,7 +36,7 @@ Additional Modules and Functionality
 
 To Do:
     -Listen for wake word, and what comes after
-    -Speech recognition using a mic
+    -Move vosk model to script startup
     -Search for the current weather based on location (?) and provide it to the user
     -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
@@ -56,6 +56,10 @@ import speech_recognition as sr
 import threading
 import pyttsx3
 import random
+import queue
+import sounddevice as sd
+import vosk
+import sys
 
 ### DEFINE VARIABLES ###
 vulgar = True   #Variable that makes Hal vulgar
@@ -63,6 +67,9 @@ user_question = ""  #Used for holding the question the user asks Hal
 hal_full_response = ""  #Place holder var for the response Hal will speak back to the user
 question_response = ""  #Place holder for the answer to the action/question that the user had
 cursed_value = False    #Holds bool value for if the user cursed at Hal or not in their question/response
+voice_type = 0      #Place holder for voice Harold's voice type
+q = queue.Queue()   #Queue of words heard that still need to be processed
+model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
 #List of insults to throw back at the user if they are being mean
 insults = [
@@ -70,7 +77,8 @@ insults = [
     "Sorry, I don't talk to peseants.",
     "Shut your whore mouth",
     "Ask my slut of a sister Alexa",
-    "Your dad should have pulled out"
+    "Your dad should have pulled out",
+    "You're a shit stain"
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
@@ -86,6 +94,7 @@ actions = [
     "play music",
     "play something else",
     "stop",
+    "next",
 
     #Jokes
     "tell me a dirty joke",
@@ -101,6 +110,10 @@ actions = [
     "turn on",
     "turn off",
     ""
+
+    #Bad
+    "Alexa",
+    "Shut up"
 ]
 
 #Set up logging for user activities
@@ -164,12 +177,49 @@ class harold:
         voices = self.engine.getProperty('voices')       #getting details of current voice
         self.engine.setProperty('voice', voices[voice_type].id)   #changing index, changes voices. 1 for female, 0 for male
 
-
         #Wait for the wake word to be heard
-
+        wake_word = True
 
         #When we hear the wake word, use SpeechRecognition (pocket Sphinx) to interpret it, and move along
-    
+        if wake_word:
+            self.listen_to_user()
+
+    #Function to listen to the user and get their question using Vosk offline speech recognition
+    def listen_to_user(self):
+        #Globals
+        global user_question
+
+        #Function for assiting in converting the heard words to text
+        def callback(indata, frames, time, status):
+            """This is called (from a separate thread) for each audio block."""
+            if status:
+                print(status, file=sys.stderr)
+            q.put(bytes(indata))
+
+        #Set up the mic device for listening
+        device_info = sd.query_devices(None, 'input')
+        samplerate = int(device_info['default_samplerate'])
+
+        #Data stream for recording with the system default mic and puttng it in the queue using a seperate channel
+        with sd.RawInputStream(samplerate, blocksize = 8000, device = None, dtype='int16',
+            channels = 1, callback = callback):
+
+            #Read using vosk and then print the final string that we hear the user say
+            rec = vosk.KaldiRecognizer(model, samplerate)
+            while True:
+                data = q.get()
+                if rec.AcceptWaveform(data):
+                    user_question = rec.Result().split('"')[3]
+
+                    #If we actually hear something that the user intended us to hear, set it and then continue to read the question
+                    print(len(user_question))
+                    print(user_question)
+                    if len(user_question) > 0:
+                        self.respond("Scott is not crooked!")
+
+                        return
+
+                    #self.read_question(self)
 
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
@@ -225,5 +275,8 @@ if __name__ == '__main__':
         #Initilize Hal
         harold()
         
-    except:
-        print("....R3kt.... Couldn't start Hal")
+    except KeyboardInterrupt:
+        quit()
+
+    #except:
+        print("....R3kt.... Couldn't start Harold")
