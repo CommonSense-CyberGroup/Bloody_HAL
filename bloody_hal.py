@@ -12,11 +12,12 @@ Version: 1.0.2
 License: MIT
 
 Purpose:
-    -This script is intended to be used as an offline, non sketchy Amazon Alexa or Google Home. 
+    -This script is intended to be used as an offline (at leat for all voice processing), non sketchy Amazon Alexa or Google Home. 
     -Voice Recognition, speech to text, API calls, and other methods of searching the internet for information are used in order to
         answer questions and provide information to the user.
     -This script / tool also is intended to be vulgar
     -"Harold" is the wake word used and the name of this AI. It is a play on the computer system in '2000, A Space Odysee'
+    -Initially intended to run on a Raspberry Pi, this can be run on other devices and OS versions as well as it was coded to be universal
 
 
 Considerations:
@@ -31,8 +32,8 @@ Additional Modules and Functionality
     -hal_music - Script that uses a Spotify API in order to search for and play music
     -hal_timer - Script for timers and alarms
     -hal_weather - script for providing the current weather for a given location
-    -hal_bluess - Integrations with BlueSS Security System
-    -hal_smart - Script for interacting with smart devices using HomeAssistant
+    -hal_bluess - Integrations with BlueSS Security System script by Common Sense Cyber Group (setup through config file, outside scope of this project / documentation)
+    -hal_smart - Script for interacting with smart devices using HomeAssistant (setup through config file, outside the scope of this project / documentation)
 
 To Do:
     -Search for the current weather based on location (?) and provide it to the user
@@ -45,7 +46,7 @@ To Do:
 ### IMPORT LIBRARIES ###
 import subprocess
 import logging
-import speech_recognition as sr
+#import speech_recognition as sr
 import threading
 import pyttsx3
 import random
@@ -200,9 +201,15 @@ class harold:
                     print(user_question)
                     if len(user_question) > 0 and wake_word.lower() in user_question:
                         self.read_question()
+                        pass
 
                     if len(user_question) > 0 and "alexa" in user_question:
                         self.respond("I don't respond to the name of the devil's creation")
+                        pass
+
+                    if len(user_question) > 0 and "ok google" in user_question:
+                        self.respond("I don't respond to the name of the devil's creation")
+                        pass
 
                     else:
                         user_question = ""
