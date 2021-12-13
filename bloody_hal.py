@@ -5,9 +5,9 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/12/2021
+Updated: 12/13/2021
 
-Version: 1.0.1
+Version: 1.0.2
 
 License: MIT
 
@@ -15,16 +15,16 @@ Purpose:
     -This script is intended to be used as an offline, non sketchy Amazon Alexa or Google Home. 
     -Voice Recognition, speech to text, API calls, and other methods of searching the internet for information are used in order to
         answer questions and provide information to the user.
-    -This script / tool also is intended to be vulgar (ability to turn it off in the config file)
+    -This script / tool also is intended to be vulgar
     -"Harold" is the wake word used and the name of this AI. It is a play on the computer system in '2000, A Space Odysee'
 
 
 Considerations:
     -NSFW
-    -The script uses offline speech recognition and processing to keep user information safe from the big Brothers of tech online
+    -The script uses offline speech recognition and processing to keep user information safe from the Big Brothers of tech online
     -Internet connectivity is however needed for most other functionality
     -Integrations with the BlueSS script from CommonSenseCyberGroup comes out of the box for communications with smart devices
-    -In order to keep this script from getting absolutely hige, other actions will be created as modules (pr additional py scripts) that Hal will import and use here
+    -In order to keep this script from getting absolutely huge, other actions will be created as modules (or additional py scripts) that Hal will import and use here
 
 
 Additional Modules and Functionality
@@ -35,14 +35,10 @@ Additional Modules and Functionality
     -hal_smart - Script for interacting with smart devices using HomeAssistant
 
 To Do:
-    -Listen for wake word, and what comes after
     -Search for the current weather based on location (?) and provide it to the user
     -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
-    -Set up ability to change system volume during config parse function
-    -Clean up the cursing detection. If it is not just an insult and an action is requested, 
-        either give a specific response (or list such as 'please wait ass hole') or try and add a correct curseword into the 
-        full response "its fucking 20deg out"
+    -Prevent Hal from hearing his own voice and using it as a question from the user
 
 '''
 
@@ -59,6 +55,7 @@ import vosk
 import sys
 
 ### DEFINE VARIABLES ###
+wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
 vulgar = True   #Variable that makes Hal vulgar
 user_question = ""  #Used for holding the question the user asks Hal
 hal_full_response = ""  #Place holder var for the response Hal will speak back to the user
@@ -72,10 +69,10 @@ model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice M
 insults = [
     "Don't fucking curse at me!",
     "Sorry, I don't talk to peseants.",
-    "Shut your whore mouth",
-    "Ask my slut of a sister Alexa",
-    "Your dad should have pulled out",
-    "You're a shit stain"
+    "Shut your whore mouth!",
+    "You can fuck right off.",
+    "Your dad should have pulled out.",
+    "You're a shit stain."
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
@@ -88,7 +85,8 @@ curse_words = [
     "slut",
     "whore",
     "dipshit",
-    "dip shit"
+    "prick",
+    "douche"
 ]
 
 #List of phrases Hal will look for in order to see if there is a question posed where he needs to take action
@@ -137,7 +135,7 @@ fh.setFormatter(formatter)                  #Add the format to the file handler
 #This function is used to parse the config upon startup, and updating periodically in the case that the user has changed something
 def parse_config():
     #Globals
-    global vulgar, voice_type
+    global voice_type
 
     #Open the config file
     try:
@@ -145,27 +143,11 @@ def parse_config():
             rows = file.readlines()
 
             for row in rows:
-                #Determine if we want Hal to be vulgar
-                try:
-                    if "vulgar:" in row:
-                        vulgar = (row.split("vulgar:")[1].replace("\n", ""))
-                except:
-                        logger.error("Unable to read vulgar setting from config file! Please check syntax!")
-                        quit()
-
-                #Determine what the volume should be (system vol), then set it
-                try:
-                    if "volume:" in row:
-                        sys_volume = (row.split("volume:")[1].replace("\n", ""))
-                except:
-                    logger.error("Unable to read volume line from config file! Please check syntax!")
-
                 #Determine the voice type (male/female) for Hal. Default is Male
                 try:
                     if "voice:" in row:
                         if (row.split("voice:")[1].replace("\n", "")).lower() == "female":
                             voice_type = 0
-
                         else:
                             voice_type = 1
                 except:
@@ -184,12 +166,8 @@ class harold:
         voices = self.engine.getProperty('voices')       #getting details of current voice
         self.engine.setProperty('voice', voices[voice_type].id)   #changing index, changes voices. 1 for female, 0 for male
 
-        #Wait for the wake word to be heard
-        wake_word = True
-
-        #When we hear the wake word, use SpeechRecognition (pocket Sphinx) to interpret it, and move along
-        if wake_word:
-            self.listen_to_user()
+        #Listen forever, but ONLY do something if the wake word is heard. If it is not heard in the user_question, reset the user_question to blank
+        self.listen_to_user()
 
     #Function to listen to the user and get their question using Vosk offline speech recognition
     def listen_to_user(self):
@@ -220,9 +198,14 @@ class harold:
 
                     #If we actually hear something that the user intended us to hear, set it and then continue to read the question
                     print(user_question)
-                    if len(user_question) > 0:
+                    if len(user_question) > 0 and wake_word.lower() in user_question:
                         self.read_question()
-                        return
+
+                    if len(user_question) > 0 and "alexa" in user_question:
+                        self.respond("I don't respond to the name of the devil's creation")
+
+                    else:
+                        user_question = ""
 
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
@@ -248,29 +231,16 @@ class harold:
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
         if cursed_value and action:
-            hal_insult_response = self.vulgar_responses()
-
-            hal_full_response = hal_insult_response + question_response
+            hal_full_response = "Now now, there is no reason to be a demanding prick." + question_response
 
             self.respond(hal_full_response)
 
         if cursed_value and not action:
             #Pick a random insult and throw it at the user
-            rand_response = random.randrange(0, len(insults), 1)
-
-            self.respond(insults[rand_response])
+            self.respond(insults[random.randrange(0, len(insults), 1)])
 
         else:
             self.respond(question_response)
-       
-    #Function for dealing with vulgar responses from the user
-    def vulgar_question(self):
-
-        #Pick a random insult and throw it at the user
-        rand_response = random.randrange(0, len(curse_words), 1)
-        hal_insult = insults[rand_response]
-
-        return hal_insult
 
     #Function for responding to the user using TTS
     def respond(self, response):
@@ -283,16 +253,16 @@ class harold:
         logger.info("User asked %s and Hal responded with %s", user_question, hal_full_response)
 
         
-
 ### THE THING ###
 if __name__ == '__main__':
     try:        
-
         #Initilize Hal
         harold()
+        logger.info("Harold successfully started!")
         
     except KeyboardInterrupt:
+        logger.info("User quit the script with Ctrl-C")
         quit()
 
-    #except:
-        print("....R3kt.... Couldn't start Harold")
+    except:
+        logger.critical("Unknown error prevented Harold from starting!")
