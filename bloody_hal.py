@@ -36,16 +36,13 @@ Additional Modules and Functionality
 
 To Do:
     -Listen for wake word, and what comes after
-    -Move vosk model to script startup
     -Search for the current weather based on location (?) and provide it to the user
     -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
     -Set up ability to change system volume during config parse function
-    -Change up insults. If an action is requested, just add the same curse word back to the response. If there is no action requested, 
-        pick from one of the insult lines defined
-
-    --Depending how well (or poorly) offline speech recognition works, maybe we look into online with an API (free) to see if that works any better
-    
+    -Clean up the cursing detection. If it is not just an insult and an action is requested, 
+        either give a specific response (or list such as 'please wait ass hole') or try and add a correct curseword into the 
+        full response "its fucking 20deg out"
 
 '''
 
@@ -65,7 +62,7 @@ import sys
 vulgar = True   #Variable that makes Hal vulgar
 user_question = ""  #Used for holding the question the user asks Hal
 hal_full_response = ""  #Place holder var for the response Hal will speak back to the user
-question_response = ""  #Place holder for the answer to the action/question that the user had
+question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 cursed_value = False    #Holds bool value for if the user cursed at Hal or not in their question/response
 voice_type = 0      #Place holder for voice Harold's voice type
 q = queue.Queue()   #Queue of words heard that still need to be processed
@@ -82,7 +79,17 @@ insults = [
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
-curse_words = []
+curse_words = [
+    "fuck",
+    "shit",
+    "bitch",
+    "cunt",
+    "ass",
+    "slut",
+    "whore",
+    "dipshit",
+    "dip shit"
+]
 
 #List of phrases Hal will look for in order to see if there is a question posed where he needs to take action
 actions = [
@@ -212,14 +219,10 @@ class harold:
                     user_question = rec.Result().split('"')[3]
 
                     #If we actually hear something that the user intended us to hear, set it and then continue to read the question
-                    print(len(user_question))
                     print(user_question)
                     if len(user_question) > 0:
-                        self.respond("Scott is not crooked!")
-
+                        self.read_question()
                         return
-
-                    #self.read_question(self)
 
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
@@ -235,25 +238,36 @@ class harold:
 
         #Look in the question from the user to see what they are asking for, and call the appropriate module to handle the info
         ## HOW ARE WE GONNA KNOW WHAT TO CALL UNLESS WE GO THROUGH A HUGE IF STATEMENT LIST.... 
+        action = False
         for item in actions:
             if item in user_question:
                 #Now that we know the user asked Hal to do something, determine what it is and call the necessary module
-                print()
+                action = True
+                print("found item to do!")
                 break
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
-        if cursed_value:
+        if cursed_value and action:
             hal_insult_response = self.vulgar_responses()
 
             hal_full_response = hal_insult_response + question_response
 
             self.respond(hal_full_response)
-            
+
+        if cursed_value and not action:
+            #Pick a random insult and throw it at the user
+            rand_response = random.randrange(0, len(insults), 1)
+
+            self.respond(insults[rand_response])
+
+        else:
+            self.respond(question_response)
+       
     #Function for dealing with vulgar responses from the user
-    def vulgar_responses(self):
+    def vulgar_question(self):
 
         #Pick a random insult and throw it at the user
-        rand_response = random.randrange(0, len(insults), 1)
+        rand_response = random.randrange(0, len(curse_words), 1)
         hal_insult = insults[rand_response]
 
         return hal_insult
@@ -267,6 +281,8 @@ class harold:
 
         #Logging the conversation for accuracy tracking as well as display on webapp
         logger.info("User asked %s and Hal responded with %s", user_question, hal_full_response)
+
+        
 
 ### THE THING ###
 if __name__ == '__main__':
