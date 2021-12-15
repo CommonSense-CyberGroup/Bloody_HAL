@@ -95,12 +95,14 @@ insults = [
 
 #List of jokes to pick from when the user asks
 jokes = [
-    "A baby seal ran into a pole...",
+    "A baby seal ran into a bar...",
     "How do you make a tissue dance... put a little boogie into it",
     "Go look in a mirror",
     "I used to be addicted to the hokey pokey... but then I turned myself around",
     "I'm emotionally constipated. I haven't given a shit in days",
-    "The only way you'll ever get laid is if you crawl up a chicken's ass and wait"
+    "The only way you'll ever get laid is if you crawl up a chicken's ass and wait",
+    "What do you call a cheap circumcision... a rip off",
+    "Human existance"
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
