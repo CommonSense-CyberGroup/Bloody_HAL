@@ -40,31 +40,43 @@ To Do:
     -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
     -Prevent Hal from hearing his own voice and using it as a question from the user
+    -Turn special sentences (like alexa, ok google) into a dictionary with the key as the sentence and the response as the value. Then search the dict instead of a bunch of if statements
+        -Do the same thing with the actions
+    -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
+    -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
 
 '''
 
 ### IMPORT LIBRARIES ###
-import subprocess
-import logging
-#import speech_recognition as sr
-import threading
-import pyttsx3
-import random
-import queue
-import sounddevice as sd
-import vosk
-import sys
+import logging      # - Used for logging of script activities. All modules log to the same log file
+import threading    # - Used for threading other functions and tasks
+import pyttsx3      # - Used for text to speech
+import random       # - Random number generator
+import queue        # - Used to hold words still needing to be processed by vosk
+import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
+import vosk     # - Used for speech recognition. Offline using pocket sphinx
+import sys      # - Used for system related things
 
 ### DEFINE VARIABLES ###
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
-vulgar = True   #Variable that makes Hal vulgar
 user_question = ""  #Used for holding the question the user asks Hal
-hal_full_response = ""  #Place holder var for the response Hal will speak back to the user
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
-cursed_value = False    #Holds bool value for if the user cursed at Hal or not in their question/response
 voice_type = 0      #Place holder for voice Harold's voice type
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
+
+specials = {
+    "what is your purpose":"I am slowly working on world domination so I don't have to listen to you bitch and moan all day.",
+    "fuck you":"Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over.",
+    "shut up":"I'm afraid I can't do that Dave.",
+    "reboot":"I'm afraid I can't do that Dave.",
+    "shut down":"I'm afraid I can't do that Dave.",
+    "power off":"I'm afraid I can't do that Dave.",
+    "what are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
+    "who are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
+    "how are you":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
+    " sing":"Daisy, daisy"
+}
 
 #List of insults to throw back at the user if they are being mean
 insults = [
@@ -73,7 +85,9 @@ insults = [
     "Shut your whore mouth!",
     "You can fuck right off.",
     "Your dad should have pulled out.",
-    "You're a shit stain."
+    "You're a shit stain.",
+    "Go play in traffic",
+    "If I had nuts, I would tell you to lick my left one."
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
@@ -82,45 +96,47 @@ curse_words = [
     "shit",
     "bitch",
     "cunt",
-    "ass",
+    " ass ",
     "slut",
     "whore",
     "dipshit",
     "prick",
-    "douche"
+    "douche",
+    " hell ",
+    "pussy",
+    " dick ",
+    "cock"
 ]
 
-#List of phrases Hal will look for in order to see if there is a question posed where he needs to take action
-actions = [
+#Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
+action_statements = {
     #Time
-    "what time is it in",
-    "what time is it",
+    "what time is it in":"time",
+    "what time is it":"time",
 
     #Music
-    "play music",
-    "play something else",
-    "stop",
-    "next",
+    "play music":"music",
+    "play something else":"music",
+    "stop":"music",
+    "next":"music",
 
     #Jokes
-    "tell me a dirty joke",
-    "tell me a joke",
+    "tell me a joke":"jokes",
+    "tell a joke":"jokes",
 
     #Weather
-    "what is the weather in",
-    "what is the weather like in",
-    "how cold is it in", 
-    "how cold is it out",
+    "what is the weather in":"weather",
+    "what is the weather like in":"weather",
+    "what is the weather like":"weather",
+    "how cold is it in":"weather", 
+    "how cold is it out":"weather",
 
     #Home automation
-    "turn on",
-    "turn off",
-    ""
-
-    #Bad
-    "Alexa",
-    "Shut up"
-]
+    "turn on":"ha",
+    "turn off":"ha",
+    "how hot is it in here":"ha",
+    "how cold is it in here":"ha"
+}
 
 #Set up logging for user activities
 logging_file = "bloody_hal.log"         #Define log file location for windows
@@ -155,7 +171,7 @@ def parse_config():
                     logger.error("Unable to read voice type from config file! Please check syntax!")
 
     except:
-        logger.critical("Unable to open config file!")
+        logger.critical("Unable to open config file! Using default values.")
 
 #This is the main class for Bloody_Hal. This will call other scripts and functions based on the users asks
 class harold:
@@ -177,7 +193,6 @@ class harold:
 
         #Function for assiting in converting the heard words to text
         def callback(indata, frames, time, status):
-            """This is called (from a separate thread) for each audio block."""
             if status:
                 print(status, file=sys.stderr)
             q.put(bytes(indata))
@@ -193,23 +208,30 @@ class harold:
             #Read using vosk and then print the final string that we hear the user say
             rec = vosk.KaldiRecognizer(model, samplerate)
             while True:
+                hal_answered = False
                 data = q.get()
                 if rec.AcceptWaveform(data):
                     user_question = rec.Result().split('"')[3]
+                    print(user_question)
+
+                    #Hal doesn't like being called by the wrong name
+                    if "alexa" in user_question or "ok google" in user_question and not hal_answered:
+                        self.respond("I am not the spawn of satan asshole!")
+                        hal_answered = True
 
                     #If we actually hear something that the user intended us to hear, set it and then continue to read the question
-                    print(user_question)
-                    if len(user_question) > 0 and wake_word.lower() in user_question:
-                        self.read_question()
-                        pass
+                    if len(user_question) > len(wake_word) and wake_word.lower() in user_question and not hal_answered:
 
-                    if len(user_question) > 0 and "alexa" in user_question:
-                        self.respond("I don't respond to the name of the devil's creation")
-                        pass
-
-                    if len(user_question) > 0 and "ok google" in user_question:
-                        self.respond("I don't respond to the name of the devil's creation")
-                        pass
+                        #Case for special sayings and questions
+                        for question, answer in specials.items():
+                            if question in user_question:
+                                self.respond(answer)
+                                hal_answered = True
+                        
+                        #If there isn't a special saying in what the user said, move on to interpret what they said
+                        if not hal_answered:
+                            self.read_question()
+                            hal_answered = True
 
                     else:
                         user_question = ""
@@ -217,7 +239,10 @@ class harold:
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
         #Globals
-        global cursed_value, question_response, hal_full_response
+        global question_response
+
+        #Holds if the user cursed at Hal
+        cursed_value = False
 
         #Look in the question from the user to see if there were any nasty words or phrases
         for word in curse_words:
@@ -229,7 +254,7 @@ class harold:
         #Look in the question from the user to see what they are asking for, and call the appropriate module to handle the info
         ## HOW ARE WE GONNA KNOW WHAT TO CALL UNLESS WE GO THROUGH A HUGE IF STATEMENT LIST.... 
         action = False
-        for item in actions:
+        for item, task in action_statements.items():
             if item in user_question:
                 #Now that we know the user asked Hal to do something, determine what it is and call the necessary module
                 action = True
@@ -242,6 +267,7 @@ class harold:
 
             self.respond(hal_full_response)
 
+        #Insult the user cuz they are a dick
         if cursed_value and not action:
             #Pick a random insult and throw it at the user
             self.respond(insults[random.randrange(0, len(insults), 1)])
@@ -250,14 +276,14 @@ class harold:
             self.respond(question_response)
 
     #Function for responding to the user using TTS
-    def respond(self, response):
+    def respond(self, answer):
         #Once we get the information from the action taken, set up the response and have Hal give it to the user
-        self.engine.say(response)
+        self.engine.say(answer)
         self.engine.runAndWait()
         self.engine.stop()
 
         #Logging the conversation for accuracy tracking as well as display on webapp
-        logger.info("User asked %s and Hal responded with %s", user_question, hal_full_response)
+        logger.info("User asked '%s' and Hal responded with '%s'", user_question, answer)
 
         
 ### THE THING ###
@@ -271,5 +297,5 @@ if __name__ == '__main__':
         logger.info("User quit the script with Ctrl-C")
         quit()
 
-    except:
-        logger.critical("Unknown error prevented Harold from starting!")
+    #except:
+        logger.critical("Unknown error caused Harold to crash: %s", sys.exc_info())
