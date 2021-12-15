@@ -1,20 +1,30 @@
 '''
-First pull out the requested location of where we need to find the time
+TITLE: HAL_TIME
+BY:
+    Some Guy they call Scooter
+    Common Sense Cyber Group
 
-Second find the geolocation of the requested place and match it to a timezone
+Created: 12/14/2021
+Updated: 12/14/2021
 
-Third get the time in that timezone and send it back as the response
+Version: 1.0.1
 
+License: MIT
+
+Purpose:
+    -This script is a small action script that Hal uses in order to respond to the user when they aks what time it is
+    -This script can also take in aother locations (other than the current users location) and find the current time based on that timezone
 '''
 
 ### IMPORT LIBRARIES ###
-import datetime
-import logging
-import geopy
-from geopy import geocoders
-from timezonefinder import TimezoneFinder
-import pytz
-import ssl
+import datetime     # - Used for getting current date and time
+import logging      # - Used for logging errors in the script
+import geopy        # - Used for finding coordinates of location if user asks
+from geopy import geocoders     # - Geocoder for doing work on finding coordinates
+from timezonefinder import TimezoneFinder   # - Used for mapping coordinates to a timezone
+import pytz     # - Used for setting a timezone to search the current time in
+import ssl      # - SSL encryption during API call
+import sys      # - System related activities
 
 ### DEFINE VARIABLES ###
 #Set the SSL context (rather remove TLS)
@@ -25,24 +35,31 @@ geocoders.options.default_ssl_context = ctx
 
 geolocator = geopy.Nominatim(user_agent="hal_time_geoapi")    #Locator to do the work
 
+#Set up logging for user activities
+logging_file = "bloody_hal.log"         #Define log file location for windows
+logger = logging.getLogger("hal_time Log")  #Define log name
+logger.setLevel(logging.DEBUG)              #Set logger level
+fh = logging.FileHandler(logging_file)      #Set the file handler for the logger
+fh.setLevel(logging.DEBUG)                  #Set the file handler log level
+logger.addHandler(fh)                       #Add the file handler to logging
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')   #Format how the log messages will look
+fh.setFormatter(formatter)                  #Add the format to the file handler
+
 ### CLASSES AND FUNCTIONS ###
 #Function to locate the timezone of the requested location
 def get_time(request):
-    #Get the location
-    location = geolocator.geocode(request)
+    try:
+        #Get the location
+        location = geolocator.geocode(request)
 
-    #Get the timezone of location
-    req_timezone = TimezoneFinder().timezone_at(lng=location.longitude, lat=location.latitude)
-    timezone = pytz.timezone(str(req_timezone))
+        #Get the timezone of location
+        req_timezone = TimezoneFinder().timezone_at(lng=location.longitude, lat=location.latitude)
+        timezone = pytz.timezone(str(req_timezone))
 
-    #Now get the current time and turn it into a readable output for Hal to speak
-    requested_time = f'It is {datetime.datetime.now(timezone).strftime("%I:%M %p")} in {request}.'
+        #Now get the current time and turn it into a readable output for Hal to speak
+        requested_time = f'It is {datetime.datetime.now(timezone).strftime("%I:%M %p")} in {request}.'
 
-    return requested_time
+        return requested_time
 
-### THE THING ###
-#This is for stand-alone testing as the get_time function will be called exclusively from the bloody_hal script.
-if __name__ == '__main__':
-    time_output = get_time("Baltimore")
-
-    print(time_output)
+    except:
+        logger.critical("Unknown error caused Harold to crash: %s", sys.exc_info())

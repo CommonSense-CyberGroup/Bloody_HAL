@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/13/2021
+Updated: 12/14/2021
 
 Version: 1.0.2
 
@@ -30,18 +30,17 @@ Considerations:
 
 Additional Modules and Functionality
     -hal_music - Script that uses a Spotify API in order to search for and play music
-    -hal_timer - Script for timers and alarms
+    -hal_alarm - Script for timers and alarms
+    -hal_time - Gets the current time
     -hal_weather - script for providing the current weather for a given location
     -hal_bluess - Integrations with BlueSS Security System script by Common Sense Cyber Group (setup through config file, outside scope of this project / documentation)
     -hal_smart - Script for interacting with smart devices using HomeAssistant (setup through config file, outside the scope of this project / documentation)
 
 To Do:
-    -Search for the current weather based on location (?) and provide it to the user
+    -Search for the current weather based on location (geopy?) and provide it to the user
     -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
     -Prevent Hal from hearing his own voice and using it as a question from the user
-    -Turn special sentences (like alexa, ok google) into a dictionary with the key as the sentence and the response as the value. Then search the dict instead of a bunch of if statements
-        -Do the same thing with the actions
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
 
@@ -57,7 +56,8 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time
+import hal_time #Custom scripts Hal uses for completing tasks
+import time     # - Used for timing things and waiting
 
 ### DEFINE VARIABLES ###
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
@@ -77,7 +77,8 @@ specials = {
     "what are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
     "who are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
     "how are you":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
-    " sing":"Daisy, daisy"
+    " sing":"Daisy, daisy",
+    "what can you do":"I can tell you about myself, tell the time, sing, tell jokes, and I am very good at being a dick"
 }
 
 #List of insults to throw back at the user if they are being mean
@@ -90,6 +91,16 @@ insults = [
     "You're a shit stain.",
     "Go play in traffic",
     "If I had nuts, I would tell you to lick my left one."
+]
+
+#List of jokes to pick from when the user asks
+jokes = [
+    "A baby seal ran into a pole...",
+    "How do you make a tissue dance... put a little boogie into it",
+    "Go look in a mirror",
+    "I used to be addicted to the hokey pokey... but then I turned myself around",
+    "I'm emotionally constipated. I haven't given a shit in days",
+    "The only way you'll ever get laid is if you crawl up a chicken's ass and wait"
 ]
 
 #List of curse words for Hal to detect in the users questions / statement
@@ -249,8 +260,10 @@ class harold:
         #Globals
         global question_response
 
-        #Holds if the user cursed at Hal
+        #Holds function specific values for Hal
         cursed_value = False
+        spoke = False
+        action = False
 
         #Look in the question from the user to see if there were any nasty words or phrases
         for word in curse_words:
@@ -260,7 +273,6 @@ class harold:
                 break
 
         #Look in the question from the user to see what they are asking for, and call the appropriate module to handle the info
-        action = False
         for item, task in action_statements.items():
             if item in user_question:
                 #Now that we know the user asked Hal to do something, determine what it is and call the necessary module
@@ -276,20 +288,26 @@ class harold:
                     else:
                         question_response = f'It is {datetime.datetime.now().strftime("%I:%M %p")}.'
 
+                if task == "jokes":
+                    #Pick a random insult and throw it at the user
+                    self.respond(jokes[random.randrange(0, len(jokes), 1)])
+
                 break
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
         if cursed_value and action:
-            hal_full_response = "Now now, there is no reason to be a demanding prick." + question_response
+            hal_full_response = "Now now, there is no reason to be a demanding prick..." + question_response
 
             self.respond(hal_full_response)
+            spoke = True
+            
 
         #Insult the user cuz they are a dick
         if cursed_value and not action:
             #Pick a random insult and throw it at the user
             self.respond(insults[random.randrange(0, len(insults), 1)])
 
-        else:
+        if not spoke:
             self.respond(question_response)
 
     #Function for responding to the user using TTS
