@@ -49,6 +49,7 @@ To Do:
 
 ### IMPORT LIBRARIES ###
 import logging      # - Used for logging of script activities. All modules log to the same log file
+import datetime     # - Used for getting current date and time
 import threading    # - Used for threading other functions and tasks
 import pyttsx3      # - Used for text to speech
 import random       # - Random number generator
@@ -56,6 +57,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
+import hal_time
 
 ### DEFINE VARIABLES ###
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
@@ -111,8 +113,8 @@ curse_words = [
 #Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
 action_statements = {
     #Time
-    "what time is it in":"time",
-    "what time is it":"time",
+    "time is it in":"time",
+    "time is it":"time",
 
     #Music
     "play music":"music",
@@ -130,10 +132,16 @@ action_statements = {
     "what is the weather like":"weather",
     "how cold is it in":"weather", 
     "how cold is it out":"weather",
+    "how hot is it in":"weather",
+    "how hot is it out":"weather",
+    "how chilly is it in":"weather",
+    "how chilly is it out":"weather",
+    "how warm is it in":"weather",
+    "how warm is it out":"weather",
 
     #Home automation
-    "turn on":"ha",
-    "turn off":"ha",
+    "turn on ":"ha",
+    "turn off ":"ha",
     "how hot is it in here":"ha",
     "how cold is it in here":"ha"
 }
@@ -252,13 +260,22 @@ class harold:
                 break
 
         #Look in the question from the user to see what they are asking for, and call the appropriate module to handle the info
-        ## HOW ARE WE GONNA KNOW WHAT TO CALL UNLESS WE GO THROUGH A HUGE IF STATEMENT LIST.... 
         action = False
         for item, task in action_statements.items():
             if item in user_question:
                 #Now that we know the user asked Hal to do something, determine what it is and call the necessary module
                 action = True
-                print("found item to do!")
+                
+                #Run the proper task based on what Hal is asked to do
+                if task == "time":
+                    #If the user asks for the time in another place
+                    if " is it in " in user_question:
+                        question_response = hal_time.get_time(user_question.split(" in ")[1])
+
+                    #Otherwise get time in current timezone
+                    else:
+                        question_response = f'It is {datetime.datetime.now().strftime("%I:%M %p")}.'
+
                 break
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
@@ -297,5 +314,5 @@ if __name__ == '__main__':
         logger.info("User quit the script with Ctrl-C")
         quit()
 
-    #except:
+    except:
         logger.critical("Unknown error caused Harold to crash: %s", sys.exc_info())
