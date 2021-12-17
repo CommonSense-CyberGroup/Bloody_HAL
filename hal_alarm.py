@@ -22,34 +22,12 @@ stop_alarm = False  #Used for stopping the alarm when finished
 
 ### CLASSES AND FUNCTIONS ###
 #Function for counting through given alarm_time
-def start_alarm(given_time):
-    #Globals
-    global stop_alarm
+def start_alarm(given_time, stop_alarm):
 
-    #Determine the length of time from now the user wishes to wait (in the given format), and then convert it to seconds
-    ##Move this to Hal and then just take in the number of seconds in this function??? That way it is easier to alert the user when the alarm is set, for how long, and if there is an error
-    if "minutes" in given_time:
-        alarm_time = ""
-        print()
-
-    if "hour" in given_time:
-        alarm_time = ""
-        print()
-
-    if "tomorrow" in given_time:
-        alarm_time = ""
-        print()
-    
-    if "am" in given_time or "pm" in given_time:
-        alarm_time = ""
-        print()
-
-    #Error catching
-    else:
-        return False
-
+    #The actual alarm, witing by 1sec
     while stop_alarm == False:
-        if str(datetime.datetime.now().time()) >= alarm_time:
+        time.sleep(1)
+        if str(datetime.datetime.now().time()) >= given_time:
             stop_alarm = True
             os.system("alarm.mp3")
 

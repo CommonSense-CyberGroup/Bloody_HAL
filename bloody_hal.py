@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/14/2021
+Updated: 12/16/2021
 
 Version: 1.0.2
 
@@ -43,6 +43,7 @@ To Do:
     -Prevent Hal from hearing his own voice and using it as a question from the user
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
+    -Think about SDR? Or at least listening to streaming EmComm radio?
 
 '''
 
@@ -56,7 +57,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time #Custom scripts Hal uses for completing tasks
+import hal_time, hal_alarm #Custom scripts Hal uses for completing tasks
 import time     # - Used for timing things and waiting
 
 ### DEFINE VARIABLES ###
@@ -152,11 +153,53 @@ action_statements = {
     "how warm is it in":"weather",
     "how warm is it out":"weather",
 
+    #Alarm
+    "set an alarm":"alarm",
+    "set a timer":"alarm",
+    "set timer":"alarm",
+    "delete timer":"alarm",
+    "delete alarm":"alarm",
+
     #Home automation
     "turn on ":"ha",
     "turn off ":"ha",
     "how hot is it in here":"ha",
     "how cold is it in here":"ha"
+}
+
+#List of numbers in order to turn them into an integer/time
+numbers = {
+    "one":1,
+    "two":2,
+    "three":3,
+    "four":4,
+    "five":5,
+    "six":6,
+    "seven":7,
+    "eight":8,
+    "nine":9,
+    "ten":10,
+    "eleven":11,
+    "twelve":12,
+    "thirteen":13,
+    "fourteen":14,
+    "fifteen":15,
+    "sixteen":16,
+    "seventeen":17,
+    "eighteen":18,
+    "nineteen":19,
+    "twenty":2,
+    "twenty minutes":"20 minutes",
+    "twenty seconds":"20 seconds",
+    "thirty":3,
+    "thirty minutes":"30 minutes",
+    "thirty seconds":"30 seconds",
+    "forty":4,
+    "forty minutes":"40 minutes",
+    "forty seconds":"40 seconds",
+    "fifty":5,
+    "fifty minutes":"50 minutes",
+    "fifty seconds":"50 seconds",
 }
 
 #Set up logging for user activities
@@ -281,6 +324,7 @@ class harold:
                 action = True
                 
                 #Run the proper task based on what Hal is asked to do
+                #Tell time
                 if task == "time":
                     #If the user asks for the time in another place
                     if " is it in " in user_question:
@@ -290,9 +334,81 @@ class harold:
                     else:
                         question_response = f'It is {datetime.datetime.now().strftime("%I:%M %p")}.'
 
+                #Tell a joke
                 if task == "jokes":
                     #Pick a random insult and throw it at the user
                     self.respond(jokes[random.randrange(0, len(jokes), 1)])
+
+                #Start an alarm or timer
+                if task == "alarm":
+                    #For string manipulation and so we do not change the original question
+                    user_in = user_question
+
+                    #Figure out what the user asked for, and then convert it to seconds
+                    try:
+                        bad = ["oclock", "o'clock", "oh clock"]
+
+                        for word in bad:
+                            if word in user_in:
+                                user_in = user_in.replace(word, "")
+                            
+                        for n_text, n_num in numbers.items():
+                            if n_text in user_in:
+                                user_in = user_in.replace(n_text, str(n_num))
+
+                        if "second" in user_in:
+                            alarm_time = int(user_in.split(" second")[0].split("for ")[1])
+                            stop_timer = False
+                            timer_response = f'Alarm set for {alarm_time} seconds from now'
+
+                        if "minute" in user_in:
+                            alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
+                            stop_timer = False
+                            timer_response = f'Alarm set for {alarm_time / 60} minutes from now'
+
+                        if "hour" in user_in:
+                            alarm_time = int(user_in.split(" hour")[0].split("for ")[1]) * 3600
+                            stop_timer = False
+                            timer_response = f'Alarm set for {alarm_time / 3600} hours from now'
+
+                        if "tomorrow" in user_in:
+                            if " am" in user_in:
+                                alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                stop_timer = False
+
+                            if " pm" in user_in:
+                                alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                stop_timer = False
+
+                            else:
+                                alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                stop_timer = False
+                                timer_response = f'Alarm set for {alarm_time} tomorrow'
+                        
+                        if " am" in user_in:
+                            alarm_time = user_in.split(" AM")[0].split("for ")[1]
+                            stop_timer = False
+                            timer_response = f'Alarm set for {alarm_time} AM'
+                        
+                        if " pm" in user_in:
+                            alarm_time = user_in.split(" PM")[0].split("for ")[1]
+                            stop_timer = False
+                            timer_response = f'Alarm set for {alarm_time} PM'
+                        
+                        #Start the treaded alarm, create the response, and let the user know
+                        #threaded_alarm = threading.Thread(targrt=hal_alarm, args=(alarm_time, stop_timer,))
+                        print(alarm_time)                  
+                        self.respond(timer_response)
+                        spoke = True
+
+                        if "delete" in user_in:
+                            stop_timer = True
+                            #threaded_alarm.join()
+                    
+                    #Error Catching
+                    except:
+                        self.respond("Sorry, I couldn't understand when you wanted to set an alarm for.")
+                        spoke = True
 
                 break
 

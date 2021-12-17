@@ -76,3 +76,43 @@
 2021-12-14 21:37:07,096 - Bloody_Hal Log - INFO - User asked 'harold tell me a joke' and Hal responded with 'How do you make a tissue dance... put a little boogie into it'
 2021-12-14 21:37:10,225 - Bloody_Hal Log - INFO - User asked 'harold tell me a joke' and Hal responded with 'I'm sorry, I didn't understand your question.'
 2021-12-14 21:37:45,396 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 19:03:04,809 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 19:09:46,311 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 19:33:54,930 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 19:54:49,023 - Bloody_Hal Log - INFO - User asked 'harold set a timer for six seconds' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 19:54:52,180 - Bloody_Hal Log - INFO - User asked 'harold set a timer for six seconds' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2021-12-16 19:54:55,665 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 19:57:18,595 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'TypeError'>, TypeError('replace() argument 2 must be str, not int'), <traceback object at 0x00000279F871E740>)
+2021-12-16 19:59:30,821 - Bloody_Hal Log - INFO - User asked 'harold settle on for six seconds' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2021-12-16 19:59:36,012 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:02:08,880 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for six seconds' and Hal responded with 'Alarm set for harold set an alarm for six seconds from now'
+2021-12-16 20:02:12,039 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for six seconds' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2021-12-16 20:02:45,807 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds' and Hal responded with 'Alarm set for harold set an alarm for five seconds from now'
+2021-12-16 20:02:48,942 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2021-12-16 20:02:50,047 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:05:09,092 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds' and Hal responded with 'Alarm set for five seconds from now'
+2021-12-16 20:05:12,202 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2021-12-16 20:05:14,693 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:09:08,020 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for twenty seconds' and Hal responded with 'Alarm set for twenty seconds from now'
+2021-12-16 20:09:21,846 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for thirty one seconds' and Hal responded with 'Alarm set for one seconds from now'
+2021-12-16 20:09:39,473 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five minutes' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 20:10:24,482 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for one minute' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 20:10:28,474 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:19:14,317 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for one second' and Hal responded with 'Alarm set for one second seconds from now'
+2021-12-16 20:20:31,877 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:21:44,628 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for six seconds from now' and Hal responded with 'Alarm set for six seconds from now'
+2021-12-16 20:22:17,931 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:24:33,453 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for six seconds from now' and Hal responded with 'Alarm set for six seconds from now'
+2021-12-16 20:24:38,294 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:30:04,561 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds from now' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 20:30:13,553 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:31:43,419 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for five seconds from now' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 20:32:02,050 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:32:49,168 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'UnboundLocalError'>, UnboundLocalError("local variable 'user_in' referenced before assignment"), <traceback object at 0x000001DD7794E6C0>)
+2021-12-16 20:35:08,412 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'TypeError'>, TypeError('replace() argument 2 must be str, not int'), <traceback object at 0x000001E15737D740>)
+2021-12-16 20:36:26,560 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for ten seconds' and Hal responded with 'Alarm set for 10 seconds from now'
+2021-12-16 20:36:34,761 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-16 20:38:24,831 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for one minute' and Hal responded with 'Alarm set for 60 minutes from now'
+2021-12-16 20:38:41,170 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for one hour' and Hal responded with 'Alarm set for 3600 hours from now'
+2021-12-16 20:38:57,531 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for twenty one seconds' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-16 20:39:00,584 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
