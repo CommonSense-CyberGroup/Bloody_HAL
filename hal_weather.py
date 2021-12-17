@@ -67,7 +67,8 @@ class get_weather():
 EXAMPLE JSON RESPONSE
 {"location": "Washington, DC", 
     "coordinates": "38.892, -77.02", 
-    "provider": "Foreca", "temperature": "14 �C", 
+    "provider": "Foreca", 
+    "temperature": "14 �C", 
     "feels like": "14 �C", 
     "sky text": "Cloudy", "humidity": "74%", 
     "wind speeds": "6 km/h", 

@@ -50,7 +50,8 @@ To Do:
 ### IMPORT LIBRARIES ###
 import logging      # - Used for logging of script activities. All modules log to the same log file
 import datetime     # - Used for getting current date and time
-import threading    # - Used for threading other functions and tasks
+import threading
+from geopy import location    # - Used for threading other functions and tasks
 import pyttsx3      # - Used for text to speech
 import random       # - Random number generator
 import queue        # - Used to hold words still needing to be processed by vosk
@@ -356,17 +357,17 @@ class harold:
                         if "second" in user_in:
                             alarm_time = int(user_in.split(" second")[0].split("for ")[1])
                             stop_timer = False
-                            timer_response = f'Alarm set for {alarm_time} seconds from now'
+                            question_response = f'Alarm set for {alarm_time} seconds from now'
 
                         if "minute" in user_in:
                             alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
                             stop_timer = False
-                            timer_response = f'Alarm set for {alarm_time / 60} minutes from now'
+                            question_response = f'Alarm set for {alarm_time / 60} minutes from now'
 
                         if "hour" in user_in:
                             alarm_time = int(user_in.split(" hour")[0].split("for ")[1]) * 3600
                             stop_timer = False
-                            timer_response = f'Alarm set for {alarm_time / 3600} hours from now'
+                            question_response = f'Alarm set for {alarm_time / 3600} hours from now'
 
                         if "tomorrow" in user_in:
                             if " am" in user_in:
@@ -380,22 +381,22 @@ class harold:
                             else:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
                                 stop_timer = False
-                                timer_response = f'Alarm set for {alarm_time} tomorrow'
+                                question_response = f'Alarm set for {alarm_time} tomorrow'
                         
                         if " am" in user_in:
                             alarm_time = user_in.split(" AM")[0].split("for ")[1]
                             stop_timer = False
-                            timer_response = f'Alarm set for {alarm_time} AM'
+                            question_response = f'Alarm set for {alarm_time} AM'
                         
                         if " pm" in user_in:
                             alarm_time = user_in.split(" PM")[0].split("for ")[1]
                             stop_timer = False
-                            timer_response = f'Alarm set for {alarm_time} PM'
+                            question_response = f'Alarm set for {alarm_time} PM'
                         
                         #Start the treaded alarm, create the response, and let the user know
                         #threaded_alarm = threading.Thread(targrt=hal_alarm, args=(alarm_time, stop_timer,))
                         print(alarm_time)                  
-                        self.respond(timer_response)
+                        self.respond(question_response)
                         spoke = True
 
                         if "delete" in user_in:
@@ -409,7 +410,257 @@ class harold:
 
                 #Get the weather
                 if task == "weather":
-                    print()
+                    """
+                    Supports:
+                        No specification (today as default)
+                        today (today)
+                        tomorrow (tomorrow)
+                        'given day' (Sunday - Saturday)
+
+                        Also acccepts 'in' where a different location is given
+                    """
+                    #Just the temperature
+                    if "hot" in user_question or "warm" in user_question or "cold" in user_question or "chilly" in user_question or "temperature" in user_question:
+                        if " today" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather(weather_location)
+
+                                #Pick out the current temp, and create the full response
+                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+
+                            else:
+                                weather_location = ""
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather(weather_location)
+
+                                #Pick out the current temp, and create the full response
+                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+
+                        if " tomorrow" in user_question:
+                            today = ""
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "sunday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "monday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "tuesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "wednesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "thursday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "friday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "saturday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        else:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather(weather_location)
+
+                                #Pick out the current temp, and create the full response
+                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+
+                            else:
+                                weather_location = ""
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather(weather_location)
+
+                                #Pick out the current temp, and create the full response
+                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+
+                    #Full weather
+                    if "weather" in user_question:
+                        if " today" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if " tomorrow" in user_question:
+                            today = ""
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "sunday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "monday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "tuesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "wednesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "thursday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "friday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "saturday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        else:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                    #Forecast for given day, or the next 5 days
+                    if "forecast" in user_question:
+                        if " today" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if " tomorrow" in user_question:
+                            today = ""
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "sunday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "monday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "tuesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "wednesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "thursday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "friday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        if "saturday" in user_question:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
+
+                        else:
+                            if " in " in user_question:
+                                weather_location = ""
+
+                            else:
+                                weather_location = ""
                 
                 break
 
@@ -420,7 +671,6 @@ class harold:
             self.respond(hal_full_response)
             spoke = True
             
-
         #Insult the user cuz they are a dick
         if cursed_value and not action:
             #Pick a random insult and throw it at the user
