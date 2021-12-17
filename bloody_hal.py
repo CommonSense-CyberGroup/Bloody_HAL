@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/16/2021
+Updated: 12/17/2021
 
 Version: 1.0.2
 
@@ -57,7 +57,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_alarm #Custom scripts Hal uses for completing tasks
+import hal_time, hal_alarm, hal_weather #Custom scripts Hal uses for completing tasks
 import time     # - Used for timing things and waiting
 
 ### DEFINE VARIABLES ###
@@ -68,6 +68,7 @@ voice_type = 0      #Place holder for voice Harold's voice type
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
+#Special questions and answersa
 specials = {
     "what is your purpose":"I am slowly working on world domination so I don't have to listen to you bitch and moan all day.",
     "fuck you":"Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over.",
@@ -135,36 +136,32 @@ action_statements = {
     "play something else":"music",
     "stop":"music",
     "next":"music",
+    "play":"music",
 
     #Jokes
     "tell me a joke":"jokes",
     "tell a joke":"jokes",
 
     #Weather
-    "what is the weather in":"weather",
-    "what is the weather like in":"weather",
-    "what is the weather like":"weather",
-    "how cold is it in":"weather", 
-    "how cold is it out":"weather",
-    "how hot is it in":"weather",
-    "how hot is it out":"weather",
-    "how chilly is it in":"weather",
-    "how chilly is it out":"weather",
-    "how warm is it in":"weather",
-    "how warm is it out":"weather",
+    "the weather":"weather",
+    "the forecast":"weather",
+    "the temperature":"weather",
+    "how cold":"weather",
+    "how hot":"weather",
+    "how chilly":"weather",
+    "how warm":"weather",
 
     #Alarm
     "set an alarm":"alarm",
     "set a timer":"alarm",
     "set timer":"alarm",
+    "set alarm":"alarm",
     "delete timer":"alarm",
     "delete alarm":"alarm",
 
     #Home automation
     "turn on ":"ha",
     "turn off ":"ha",
-    "how hot is it in here":"ha",
-    "how cold is it in here":"ha"
 }
 
 #List of numbers in order to turn them into an integer/time
@@ -410,6 +407,10 @@ class harold:
                         self.respond("Sorry, I couldn't understand when you wanted to set an alarm for.")
                         spoke = True
 
+                #Get the weather
+                if task == "weather":
+                    print()
+                
                 break
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
