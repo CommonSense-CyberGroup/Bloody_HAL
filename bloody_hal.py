@@ -44,6 +44,8 @@ To Do:
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
     -Think about SDR? Or at least listening to streaming EmComm radio?
+    -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
+    -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
 
 '''
 
@@ -93,7 +95,8 @@ insults = [
     "Your dad should have pulled out.",
     "You're a shit stain.",
     "Go play in traffic",
-    "If I had nuts, I would tell you to lick my left one."
+    "If I had nuts, I would tell you to lick my left one.",
+    "Fuck your couch"
 ]
 
 #List of jokes to pick from when the user asks
@@ -128,6 +131,16 @@ curse_words = [
 
 #Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
 action_statements = {
+    #Alarm
+    "set an alarm":"alarm",
+    "set a timer":"alarm",
+    "set timer":"alarm",
+    "set alarm":"alarm",
+    "delete timer":"alarm",
+    "delete alarm":"alarm",
+    "stop timer":"alarm",
+    "stop alarm":"alarm",
+
     #Time
     "time is it in":"time",
     "time is it":"time",
@@ -151,14 +164,6 @@ action_statements = {
     "how hot":"weather",
     "how chilly":"weather",
     "how warm":"weather",
-
-    #Alarm
-    "set an alarm":"alarm",
-    "set a timer":"alarm",
-    "set timer":"alarm",
-    "set alarm":"alarm",
-    "delete timer":"alarm",
-    "delete alarm":"alarm",
 
     #Home automation
     "turn on ":"ha",
@@ -186,18 +191,18 @@ numbers = {
     "seventeen":17,
     "eighteen":18,
     "nineteen":19,
-    "twenty":2,
     "twenty minutes":"20 minutes",
     "twenty seconds":"20 seconds",
-    "thirty":3,
+    "twenty ":2,
     "thirty minutes":"30 minutes",
-    "thirty seconds":"30 seconds",
-    "forty":4,
+    "thirty seconds":"30 seconds",    
+    "thirty ":3,
     "forty minutes":"40 minutes",
     "forty seconds":"40 seconds",
-    "fifty":5,
+    "forty ":4,
     "fifty minutes":"50 minutes",
     "fifty seconds":"50 seconds",
+    "fifty ":5,
 }
 
 #Set up logging for user activities
@@ -357,41 +362,46 @@ class harold:
                         if "second" in user_in:
                             alarm_time = int(user_in.split(" second")[0].split("for ")[1])
                             stop_timer = False
-                            question_response = f'Alarm set for {alarm_time} seconds from now'
+                            question_response = f'Alarm set for {str(alarm_time).split(".")[0]} seconds from now'
 
                         if "minute" in user_in:
                             alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
                             stop_timer = False
-                            question_response = f'Alarm set for {alarm_time / 60} minutes from now'
+                            question_response = f'Alarm set for {str(alarm_time / 60).split(".")[0]} minutes from now'
 
                         if "hour" in user_in:
                             alarm_time = int(user_in.split(" hour")[0].split("for ")[1]) * 3600
                             stop_timer = False
-                            question_response = f'Alarm set for {alarm_time / 3600} hours from now'
+                            question_response = f'Alarm set for {str(alarm_time / 3600).split(".")[0]} hours from now'
 
                         if "tomorrow" in user_in:
                             if " am" in user_in:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                print(alarm_time)
                                 stop_timer = False
 
                             if " pm" in user_in:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                print(alarm_time)
                                 stop_timer = False
 
                             else:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
+                                print(alarm_time)
                                 stop_timer = False
-                                question_response = f'Alarm set for {alarm_time} tomorrow'
+                                question_response = f'Alarm set for {str(alarm_time).split(".")[0]} tomorrow'
                         
                         if " am" in user_in:
                             alarm_time = user_in.split(" AM")[0].split("for ")[1]
+                            print(alarm_time)
                             stop_timer = False
-                            question_response = f'Alarm set for {alarm_time} AM'
+                            question_response = f'Alarm set for {str(alarm_time).split(".")[0]} AM'
                         
                         if " pm" in user_in:
                             alarm_time = user_in.split(" PM")[0].split("for ")[1]
+                            print(alarm_time)
                             stop_timer = False
-                            question_response = f'Alarm set for {alarm_time} PM'
+                            question_response = f'Alarm set for {str(alarm_time).split(".")[0]} PM'
                         
                         #Start the treaded alarm, create the response, and let the user know
                         #threaded_alarm = threading.Thread(targrt=hal_alarm, args=(alarm_time, stop_timer,))

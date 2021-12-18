@@ -116,3 +116,16 @@
 2021-12-16 20:38:41,170 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for one hour' and Hal responded with 'Alarm set for 3600 hours from now'
 2021-12-16 20:38:57,531 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for twenty one seconds' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
 2021-12-16 20:39:00,584 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-17 17:51:05,374 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for ten seconds' and Hal responded with 'Alarm set for 10 seconds from now'
+2021-12-17 17:51:15,425 - Bloody_Hal Log - INFO - User asked 'alarms every ten seconds harold set an alarm for two hours' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2021-12-17 17:51:26,472 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for two hours' and Hal responded with 'Alarm set for 2.0 hours from now'
+2021-12-17 17:52:03,340 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for thirty minutes' and Hal responded with 'Alarm set for 3.0 minutes from now'
+2021-12-17 17:52:13,190 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-17 17:55:05,796 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for two hours' and Hal responded with 'Alarm set for 2.0 hours from now'
+2021-12-17 17:55:23,778 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for twenty minutes from now' and Hal responded with 'Alarm set for 20.0 minutes from now'
+2021-12-17 17:55:45,091 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for twenty seven minutes' and Hal responded with 'Alarm set for 27.0 minutes from now'
+2021-12-17 17:55:56,219 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for thirty eight minutes' and Hal responded with 'Alarm set for 38.0 minutes from now'
+2021-12-17 17:56:15,333 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for fifty five hours' and Hal responded with 'Alarm set for 55.0 hours from now'
+2021-12-17 17:56:16,399 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2021-12-17 17:59:40,605 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for thirty two minutes' and Hal responded with 'Alarm set for 32.0 minutes from now'
+2021-12-17 17:59:58,616 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
