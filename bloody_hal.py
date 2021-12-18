@@ -50,8 +50,8 @@ To Do:
 ### IMPORT LIBRARIES ###
 import logging      # - Used for logging of script activities. All modules log to the same log file
 import datetime     # - Used for getting current date and time
-import threading
-from geopy import location    # - Used for threading other functions and tasks
+import threading    # - Used for threading other functions and tasks
+from geopy import location    
 import pyttsx3      # - Used for text to speech
 import random       # - Random number generator
 import queue        # - Used to hold words still needing to be processed by vosk
