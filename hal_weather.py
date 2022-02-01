@@ -35,7 +35,6 @@ fh.setFormatter(formatter)                  #Add the format to the file handler
 
 ### CLASSES AND FUNCTIONS ###
 def get_weather(location):
-    #def __init__(self, location):
     #Create a loop with the function
     loop = asyncio.get_event_loop()
 
@@ -53,9 +52,11 @@ async def getweather(local):
         #Get the weather from the desireed location
         weather = await client.find(local)
 
+        #Combine the info to provide to the main script
+        weather_combined = [weather.current.temperature, weather.current.feels_like, weather.current.sky_text, weather.current.humidity, weather.current.wind_speed]
+
         #Close the client once finished
         await client.close()
-        weather_combined = [weather.current.temperature, weather.current.feels_like, weather.current.sky_text, weather.current.humidity, weather.current.wind_speed]
 
         #Return the weather json mess for the Main Hal script to parse through and return depending on what the user asked
         return weather_combined
@@ -64,11 +65,44 @@ async def getweather(local):
         logger.critical("Unable to get weather data: %s", sys.exc_info())
         #return "An error occurred while trying to fetch the weather data."
 
-def conversions(temp):
-    converted = (int(temp) * 1.8) + 32
 
-    return converted
+### BELOW FUNCTIONS ARE USED FOR FORECASTS ONLY ###
+def get_forecast(location, day):
+    #Create a loop with the function
+    loop = asyncio.get_event_loop()
 
+    #Run the loop until we get all of the weather data
+    weather_response = loop.run_until_complete(getforecast(location, day))
+
+    #Return weather data to bloody_hal
+    return weather_response
+
+async def getforecast(local, day):
+    try:
+        #Create client and change values to metric/F
+        client = python_weather.Client(format=python_weather.IMPERIAL)
+
+        #Get the weather from the desireed location
+        weather = await client.find(local)
+
+        for forecast in weather.forecasts:
+            if str(forecast.day == day):
+
+                #Combine the data we need for the requested forecast to return to the main script
+                weather_combined = [forecast.low, forecast.high, forecast.sky_text, forecast.precip]
+
+        #Close the client once finished
+        await client.close()
+
+        #Return the weather json mess for the Main Hal script to parse through and return depending on what the user asked
+        return weather_combined
+
+    except:
+        logger.critical("Unable to get weather data: %s", sys.exc_info())
+        #return "An error occurred while trying to fetch the weather data."
+
+#Only used in stand-alone testing
+#get_forecast("Denver, CO", "Wednesday")
 get_weather("Denver, CO")
 
 '''

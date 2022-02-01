@@ -154,3 +154,27 @@
 2022-02-01 08:58:16,282 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature outside' and Hal responded with 'The current temperature in Lakewood is 27 degrees, and feels like 26 degrees'
 2022-02-01 08:59:13,104 - Bloody_Hal Log - INFO - User asked 'harold how cold is it in baltimore maryland' and Hal responded with 'The current temperature in baltimore maryland is [33, 29, 'Mostly Sunny', 60, 4] degrees, and feels like 29 degrees'
 2022-02-01 08:59:21,708 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 09:12:20,040 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in Lakewood is 27 degrees, and feels like 26 degrees'
+2022-02-01 09:12:49,781 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature in chicago' and Hal responded with 'The current temperature in chicago is 41 degrees, and feels like 31 degrees'
+2022-02-01 09:13:06,192 - Bloody_Hal Log - INFO - User asked 'harold what's the weather like today' and Hal responded with 'Today, in Lakewood it is 27 degrees, feels like 26 degrees. Skies are Partly Sunny with 49 mile per hour winds.'
+2022-02-01 09:14:10,066 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 10:30:47,590 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 10:30 AM.'
+2022-02-01 10:30:55,976 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'AttributeError'>, AttributeError("'Weather' object has no attribute 'forecast'"), <traceback object at 0x00000230A19BCAC0>)
+2022-02-01 10:33:38,489 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in Lakewood is 28 degrees, and feels like 23 degrees'
+2022-02-01 10:34:00,864 - Bloody_Hal Log - INFO - User asked 'harold what's the weather today' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:34:44,351 - Bloody_Hal Log - INFO - User asked 'harold what's the weather tomorrow' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:35:46,108 - Bloody_Hal Log - INFO - User asked 'harold what's the weather like tomorrow' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:36:49,303 - Bloody_Hal Log - INFO - User asked 'harold what's the weather like wednesday' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:36:50,637 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 10:39:04,706 - Bloody_Hal Log - INFO - User asked 'harold how hot is it out' and Hal responded with 'The current temperature in Lakewood is 28 degrees, and feels like 23 degrees'
+2022-02-01 10:39:26,858 - Bloody_Hal Log - INFO - User asked 'harold what's the forecast for tomorrow' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:39:34,263 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 10:41:25,891 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be tomorrow' and Hal responded with 'The current temperature in Lakewood is 28 degrees, and feels like 23 degrees'
+2022-02-01 10:42:56,836 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 10:43:49,828 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be on wednesday' and Hal responded with 'The current temperature in Lakewood is 28 degrees, and feels like 23 degrees'
+2022-02-01 10:45:39,787 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 10:46:38,043 - Bloody_Hal Log - INFO - User asked 'harold what's the weather today' and Hal responded with 'Today, in Lakewood it is 28 degrees, feels like 23 degrees. The expected low is 22 and expected high is 35. Skies are Partly Sunny with 5 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 10:46:52,692 - Bloody_Hal Log - INFO - User asked 'harold how cold is it today' and Hal responded with 'The current temperature in Lakewood is 28 degrees, and feels like 23 degrees'
+2022-02-01 10:47:06,157 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be tomorrow' and Hal responded with 'On Wednesday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
+2022-02-01 10:47:20,574 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be on thursday' and Hal responded with 'On Thursday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
+2022-02-01 10:48:02,374 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
