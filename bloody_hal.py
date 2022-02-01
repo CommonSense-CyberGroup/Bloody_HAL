@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 12/17/2021
+Updated: 2/1/2022
 
 Version: 1.0.2
 
@@ -433,244 +433,268 @@ class harold:
                     if "hot" in user_question or "warm" in user_question or "cold" in user_question or "chilly" in user_question or "temperature" in user_question:
                         if " today" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                                 #Call the weather script with the requested location
-                                weather_response = hal_weather(weather_location)
+                                weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                                 #Call the weather script with the requested location
-                                weather_response = hal_weather(weather_location)
+                                weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                         if " tomorrow" in user_question:
                             today = ""
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "sunday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "monday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "tuesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "wednesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "thursday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "friday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "saturday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         else:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                                 #Call the weather script with the requested location
-                                weather_response = hal_weather(weather_location)
+                                weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                                 #Call the weather script with the requested location
-                                weather_response = hal_weather(weather_location)
+                                weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location} is {weather_response.current.temperature} degrees'
+                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                     #Full weather
                     if "weather" in user_question:
                         if " today" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather.get_weather(weather_location)
+
+                                #Pick out the necessary items and return them
+                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. Skies are {weather_response[2]} with {weather_response[3]} mile per hour winds.'
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather.get_weather(weather_location)
+
+                                #Pick out the necessary items and return them
+                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. Skies are {weather_response[2]} with {weather_response[3]} mile per hour winds.'
 
                         if " tomorrow" in user_question:
                             today = ""
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "sunday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "monday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "tuesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "wednesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "thursday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "friday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "saturday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         else:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather.get_weather(weather_location)
+
+                                #Pick out the necessary items and return them
+                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. Skies are {weather_response[2]} with {weather_response[3]} mile per hour winds.'
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
+
+                                #Call the weather script with the requested location
+                                weather_response = hal_weather.get_weather(weather_location)
+
+                                #Pick out the necessary items and return them
+                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. Skies are {weather_response[2]} with {weather_response[3]} mile per hour winds.'
 
                     #Forecast for given day, or the next 5 days
                     if "forecast" in user_question:
                         if " today" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if " tomorrow" in user_question:
                             today = ""
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "sunday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "monday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "tuesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "wednesday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "thursday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "friday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         if "saturday" in user_question:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
 
                         else:
                             if " in " in user_question:
-                                weather_location = ""
+                                weather_location = user_question.split("in ")[1]
 
                             else:
-                                weather_location = ""
+                                weather_location = "Lakewood, CO"
                 
                 break
 
@@ -711,5 +735,5 @@ if __name__ == '__main__':
         logger.info("User quit the script with Ctrl-C")
         quit()
 
-    except:
+    #except:
         logger.critical("Unknown error caused Harold to crash: %s", sys.exc_info())

@@ -129,3 +129,28 @@
 2021-12-17 17:56:16,399 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
 2021-12-17 17:59:40,605 - Bloody_Hal Log - INFO - User asked 'harold set an alarm for thirty two minutes' and Hal responded with 'Alarm set for 32.0 minutes from now'
 2021-12-17 17:59:58,616 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 07:47:26,969 - Bloody_Hal Log - INFO - User asked 'harold how are you' and Hal responded with 'I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.'
+2022-02-01 07:47:38,542 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 07:47 AM.'
+2022-02-01 07:47:48,893 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'TypeError'>, TypeError("'module' object is not callable"), <traceback object at 0x00000105AE20C980>)
+2022-02-01 07:56:37,264 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 08:11:52,947 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 08:11 AM.'
+2022-02-01 08:12:08,531 - Bloody_Hal Log - INFO - User asked 'harold what time is it in baltimore maryland' and Hal responded with 'It is 10:12 AM in baltimore maryland.'
+2022-02-01 08:12:19,578 - Bloody_Hal Log - INFO - User asked 'harold what time is it in chicago' and Hal responded with 'It is 09:12 AM in chicago.'
+2022-02-01 08:12:28,289 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x0000020B9A249540>)
+2022-02-01 08:14:39,643 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x000001B25C6909C0>)
+2022-02-01 08:16:49,373 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x000001F1217609C0>)
+2022-02-01 08:18:47,841 - Bloody_Hal Log - INFO - User asked 'harold how are you' and Hal responded with 'I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.'
+2022-02-01 08:18:56,694 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x0000024D5CC5CDC0>)
+2022-02-01 08:25:08,943 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x0000027A12895900>)
+2022-02-01 08:26:44,826 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x0000023A647758C0>)
+2022-02-01 08:29:23,651 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'TypeError'>, TypeError('location must be a string.'), <traceback object at 0x00000141CA656840>)
+2022-02-01 08:29:26,229 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in  is None degrees'
+2022-02-01 08:30:54,949 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 08:35:31,676 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'AttributeError'>, AttributeError("'CurrentForecast' object has no attribute 'feelslike'"), <traceback object at 0x00000145774847C0>)
+2022-02-01 08:48:13,635 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in Denver, CO is 80 degrees, and feels like 78'
+2022-02-01 08:49:31,733 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 08:50:36,988 - Bloody_Hal Log - INFO - User asked 'harold how warm is it out' and Hal responded with 'The current temperature in Denver is 80 degrees, and feels like 78 degrees'
+2022-02-01 08:51:36,700 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 08:58:16,282 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature outside' and Hal responded with 'The current temperature in Lakewood is 27 degrees, and feels like 26 degrees'
+2022-02-01 08:59:13,104 - Bloody_Hal Log - INFO - User asked 'harold how cold is it in baltimore maryland' and Hal responded with 'The current temperature in baltimore maryland is [33, 29, 'Mostly Sunny', 60, 4] degrees, and feels like 29 degrees'
+2022-02-01 08:59:21,708 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
