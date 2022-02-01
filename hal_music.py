@@ -12,8 +12,11 @@ Version: 1.0.1
 License: MIT
 
 Purpose:
-    -This script is used for getting weather data from any given location that the user asks for
-    -This script will be called from the main Bloody_Hal script as a function/class call
+    -This script is used for streaming music off of youtube
+    -VLC (same arch as installed python version) is required for this to work properly!
+
+To Do:
+    -Figure out how to find a playlist and play it (ie create personal playlists, and then randompy play one, or select one from the group)
 '''
 
 ### IMPORT LIBRARIES ###
