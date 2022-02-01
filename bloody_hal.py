@@ -60,7 +60,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_alarm, hal_weather #Custom scripts Hal uses for completing tasks
+import hal_time, hal_alarm, hal_weather, hal_music #Custom scripts Hal uses for completing tasks
 import time     # - Used for timing things and waiting
 
 ### DEFINE VARIABLES ###
@@ -147,10 +147,11 @@ action_statements = {
 
     #Music
     "play music":"music",
+    "play something":"music",
     "play something else":"music",
     "stop":"music",
     "next":"music",
-    "play":"music",
+    " play ": "music",
 
     #Jokes
     "tell me a joke":"jokes",
@@ -852,6 +853,41 @@ class harold:
                     except:
                         question_response = "I'm sorry, there was an issue trying to get the weather either because the request timed out, there is no weather data for what you asked for, or the location you asked for was not clear. Please try again."
 
+                #Play music
+                # IF threading will not work here, we will subprocess the hal_music script, get the PID when it starts so we can kill it. There will be no pausing it though
+                if task == "music":
+                    #If the user just wants to hear music, randomly select a playlist for them
+                    if "play music" in user_question or "play something" in user_question:
+                        print()
+                    
+                    #User asks for a specific song by someone, we remove the 'by' and just search for what they asked
+                    elif " by " in user_question:
+                        song = user_question.split("play ")[1].replace(" by ", " ")
+
+                        hal_music.kicker(song)
+
+                    #If the user asks to play something else
+                    elif "play something else" in user_question or " next " in user_question:
+                        print()
+
+                    #If the user wants us to stop the currently playing music
+                    elif " stop " in user_question:
+                        print()
+
+                    #If the user wants us to pause the currently playing music
+                    elif " pause " in user_question:
+                        print()
+
+                    #If the user wants is to resume what was playing. If nothing was playing, play something random
+                    #elif " play " in user_question:
+                        #print()
+
+                    #Catch-all for if the user just requests something to be played
+                    else:
+                        song = user_question.split(" play ")[1]
+
+                        hal_music.kicker(song)
+
                 break
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
@@ -875,6 +911,9 @@ class harold:
         self.engine.say(answer)
         self.engine.runAndWait()
         self.engine.stop()
+
+        #Reset the response so Harold doesn't repeat himself
+        question_response = "I'm sorry, I didn't understand your question."
 
         #Logging the conversation for accuracy tracking as well as display on webapp
         logger.info("User asked '%s' and Hal responded with '%s'", user_question, answer)

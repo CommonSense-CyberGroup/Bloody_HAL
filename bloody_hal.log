@@ -204,3 +204,10 @@
 2022-02-01 11:21:00,412 - Bloody_Hal Log - INFO - User asked 'harold what's the weather like today' and Hal responded with 'Today, in Lakewood it is 29 degrees, feels like 30 degrees. The expected low is 22 and expected high is 35. Skies are Mostly Cloudy with 3 mile per hour winds, and 0 percent chance of precipitation'
 2022-02-01 11:21:14,704 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature today' and Hal responded with 'The current temperature in Lakewood is 29 degrees, and feels like 30 degrees'
 2022-02-01 11:21:23,438 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 14:55:41,933 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in Lakewood is 27 degrees, and feels like 19 degrees'
+2022-02-01 14:55:51,708 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 02:55 PM.'
+2022-02-01 14:56:20,791 - Bloody_Hal Log - INFO - User asked 'harold please say it ain't so' and Hal responded with 'It is 02:55 PM.'
+2022-02-01 14:56:41,896 - Bloody_Hal Log - INFO - User asked 'harold play say it ain't so' and Hal responded with 'It is 02:55 PM.'
+2022-02-01 14:58:30,574 - Bloody_Hal Log - INFO - User asked 'harold play cheat code' and Hal responded with 'It is 02:55 PM.'
+2022-02-01 14:58:48,552 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 15:07:13,953 - Bloody_Hal Log - INFO - User asked 'harold play hello' and Hal responded with 'I'm sorry, I didn't understand your question.'
