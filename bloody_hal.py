@@ -849,8 +849,8 @@ class harold:
                                 #Pick out the necessary items and return them
                                 question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
 
-                    except TypeError:
-                        question_response = "I'm sorry, there was an issue trying to get the weather either because the request timed out, or the location you asked for was not clear. Please try again."
+                    except:
+                        question_response = "I'm sorry, there was an issue trying to get the weather either because the request timed out, there is no weather data for what you asked for, or the location you asked for was not clear. Please try again."
 
                 break
 
