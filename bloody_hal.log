@@ -178,3 +178,8 @@
 2022-02-01 10:47:06,157 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be tomorrow' and Hal responded with 'On Wednesday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
 2022-02-01 10:47:20,574 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be on thursday' and Hal responded with 'On Thursday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
 2022-02-01 10:48:02,374 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 11:02:16,423 - Bloody_Hal Log - INFO - User asked 'harold how cold will it be tomorrow' and Hal responded with 'On Wednesday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
+2022-02-01 11:02:32,402 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature tomorrow in chicago' and Hal responded with 'On Wednesday in Lakewood the expected low is 22 degrees, and expected high is 35 degrees'
+2022-02-01 11:02:54,811 - Bloody_Hal Log - INFO - User asked 'harold is it going to rain today' and Hal responded with 'Today, in Lakewood there is 0 percent chance of precipitation'
+2022-02-01 11:03:05,847 - Bloody_Hal Log - INFO - User asked 'harold is it going to rain tomorrow' and Hal responded with 'Tomorrow, in Lakewood there is 0 percent chance of precipitation'
+2022-02-01 11:03:27,531 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C

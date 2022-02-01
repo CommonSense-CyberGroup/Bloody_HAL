@@ -164,6 +164,11 @@ action_statements = {
     "how hot":"weather",
     "how chilly":"weather",
     "how warm":"weather",
+    " rain ":"weather",
+    " snow ":"weather",
+    " storm ":"weather",
+    " sleet ":"weather",
+    " hail ":"weather",
 
     #Home automation
     "turn on ":"ha",
@@ -440,20 +445,14 @@ class harold:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-
-                                #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
 
-                                #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                            #Pick out the current temp, and create the full response
+                            question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                         elif "tomorrow" in user_question:
                             if " in " in user_question:
@@ -578,217 +577,280 @@ class harold:
                                 #Pick out the current temp, and create the full response
                                 question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
+                    #Just the precip
+                    if "rain" in user_question or "hail" in user_question or "snow" in user_question or "sleet" in user_question or "storm" in user_question:
+                        if "today" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, today)
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Today, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "tomorrow" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, tomorrow)
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Tomorrow, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "sunday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Sunday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Sunday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "monday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Monday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Monday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "tuesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Tuesday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Tuesday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "wednesday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Wednesday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Wednesday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        elif "thursday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Thursday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Thursday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+                        
+                        elif "friday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Friday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Friday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+                        
+                        elif "saturday" in user_question:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            forecast_response = hal_weather.get_forecast(weather_location, "Saturday")
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Saturday, in {weather_location.split(",")[0]} there is {forecast_response[3]} percent chance of precipitation'
+
+                        else:
+                            if " in " in user_question:
+                                weather_location = user_question.split("in ")[1]
+
+                            else:
+                                weather_location = "Lakewood, CO"
+
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, today)
+
+                            #Pick out the necessary items and return them
+                            question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
+
                     #Full weather
                     if "weather" in user_question or "forecast" in user_question:
                         if "today" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, today)
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, today)
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, today)
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
 
                         elif "tomorrow" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, tomorrow)
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Tomorrow, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, tomorrow)
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, tomorrow)
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Tomorrow, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Tomorrow, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "sunday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Sunday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Sunday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Sunday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Sunday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Sunday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Sunday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "monday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Monday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Monday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Monday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Monday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Monday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Monday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "tuesday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Tuesday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Tuesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Tuesday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Tuesday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Tuesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Tuesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "wednesday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Wednesday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Wednesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Wednesday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Wednesday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Wednesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Wednesday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "thursday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Thursday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Thursday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Thursday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Thursday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Thursday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Thursday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         elif "friday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Friday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Friday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Friday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Friday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Friday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Friday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
                         
                         elif "saturday" in user_question:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Saturday")
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Saturday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, "Saturday")
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, "Saturday")
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Saturday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Saturday, in {weather_location.split(",")[0]} the expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {forecast_response[2]} and {forecast_response[3]} percent chance of precipitation'
 
                         else:
                             if " in " in user_question:
                                 weather_location = user_question.split("in ")[1]
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, today)
-
-                                #Pick out the necessary items and return them
-                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
-
                             else:
                                 weather_location = "Lakewood, CO"
 
-                                #Call the weather script with the requested location
-                                weather_response = hal_weather.get_weather(weather_location)
-                                forecast_response = hal_weather.get_forecast(weather_location, today)
+                            #Call the weather script with the requested location
+                            weather_response = hal_weather.get_weather(weather_location)
+                            forecast_response = hal_weather.get_forecast(weather_location, today)
 
-                                #Pick out the necessary items and return them
-                                question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
+                            #Pick out the necessary items and return them
+                            question_response = f'Today, in {weather_location.split(",")[0]} it is {weather_response[0]} degrees, feels like {weather_response[1]} degrees. The expected low is {forecast_response[0]} and expected high is {forecast_response[1]}. Skies are {weather_response[2]} with {weather_response[4]} mile per hour winds, and {forecast_response[3]} percent chance of precipitation'
 
                 break
 
