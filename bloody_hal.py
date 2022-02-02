@@ -133,8 +133,7 @@ curse_words = [
 #Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
 action_statements = {
     #Asshole mode
-    "asshole mode":"asshole",
-    "are you being an asshole":"asshole",
+    "asshole ":"asshole",
 
     #Alarm
     "set an alarm":"alarm",
@@ -151,7 +150,7 @@ action_statements = {
     "time is it":"time",
 
     #Music
-    "play music":"music",
+    " play music":"music",
     "play something":"music",
     "play something else":"music",
     "stop":"music",
@@ -348,7 +347,7 @@ class harold:
                 #Run the proper task based on what Hal is asked to do
                 #Asshole mode
                 if task == "asshole":
-                    if "is asshole mode enabled" in user_question or "is asshole mode on" in user_question or "is asshole mode on" in user_question:
+                    if "is asshole mode enabled" in user_question or "is asshole mode on" in user_question or "is asshole mode on" in user_question or "are you an asshole":
                         if asshole_mode:
                             question_response = "Yes, I am currently being an asshole"
                         
@@ -618,7 +617,11 @@ class harold:
                                 weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                                if int(weather_response[0] < 20):
+                                    question_response = f'It is cold as tits! The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                                
+                                else:
+                                    question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                         #Just the precip
                         if "rain" in user_question or "hail" in user_question or "snow" in user_question or "sleet" in user_question or "storm" in user_question:
@@ -957,16 +960,6 @@ class harold:
 
                 break
 
-        #If Hal is in asshole mode, randomly not respond to the user with what they asked
-        if asshole_mode:
-            if random.randrange(0, 10, 1) % 2 == 0:
-                self.respond("I'm sorry, I just simply can't do that")
-
-            else:
-                self.respond(question_response)
-
-            spoke = True
-
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
         if cursed_value and action:
             hal_full_response = "Now now, there is no reason to be a demanding prick..." + question_response
@@ -986,6 +979,14 @@ class harold:
     def respond(self, answer):
         #Globals
         global question_response
+
+        #If Hal is in asshole mode, randomly not respond to the user with what they asked
+        if asshole_mode:
+            if random.randrange(0, 100, 1) % 2 == 0:
+                answer = "I'm sorry, I just simply can't do that"
+
+            else:
+                answer = question_response
 
         #Once we get the information from the action taken, set up the response and have Hal give it to the user
         self.engine.say(answer)
