@@ -932,6 +932,8 @@ class harold:
             else:
                 self.respond(question_response)
 
+            spoke = True
+
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
         if cursed_value and action:
             hal_full_response = "Now now, there is no reason to be a demanding prick..." + question_response
