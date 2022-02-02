@@ -43,6 +43,7 @@ To Do:
     -Think about SDR? Or at least listening to streaming EmComm radio?
     -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
+    -At the very end except statement, make Hal subprocess himself so he restarts again
 
 '''
 
@@ -64,6 +65,7 @@ user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
+asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with "Im sorry, I just simply can't do that"
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
@@ -127,6 +129,10 @@ curse_words = [
 
 #Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
 action_statements = {
+    #Asshole mode
+    "asshole mode":"asshole",
+    "are you being an asshole":"asshole",
+
     #Alarm
     "set an alarm":"alarm",
     "set a timer":"alarm",
@@ -308,7 +314,7 @@ class harold:
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
         #Globals
-        global question_response
+        global question_response, asshole_mode
 
         #Holds function specific values for Hal
         cursed_value = False
@@ -329,6 +335,30 @@ class harold:
                 action = True
                 
                 #Run the proper task based on what Hal is asked to do
+                #Asshole mode
+                if task == "asshole":
+                    if "is asshole mode enabled" in user_question or "is asshole mode on" in user_question or "is asshole mode on" in user_question:
+                        if asshole_mode:
+                            question_response = "Yes, I am currently being an asshole"
+                        
+                        else:
+                            question_response = "No, I am not being an asshole"
+
+                    elif "enable asshole" in user_question or "turn on asshole" in user_question or "activate asshole" in user_question or "be an asshole" in user_question:
+                        if asshole_mode:
+                            question_response = "I am already being an asshole, fuck off"
+
+                        else:
+                            asshole_mode = True
+                            question_response = "Fuck off"
+
+                    elif "disable asshole" in user_question or "turn off asshole" in user_question or "deactivate asshole" in user_question or "stop being an asshole" in user_question:
+                        if not asshole_mode:
+                            question_response = "I'm not being an asshole, you're just an overly sensitive bitch"
+
+                        else:
+                            asshole_mode = False
+
                 #Tell time
                 if task == "time":
                     #If the user asks for the time in another place
@@ -893,6 +923,14 @@ class harold:
                         hal_music.kicker(song)
 
                 break
+
+        #If Hal is in asshole mode, randomly not respond to the user with what they asked
+        if asshole_mode:
+            if random.randrange(0, 10) % 2 == 0:
+                self.respond("I'm sorry, I just simply can't do that")
+
+            else:
+                self.respond(question_response)
 
         #If the user cursed, run the vulgar function, and add the insult to the returned result of the question. Otherwise just throw an insult.
         if cursed_value and action:
