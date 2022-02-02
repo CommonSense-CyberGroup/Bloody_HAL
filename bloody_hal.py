@@ -29,7 +29,7 @@ Considerations:
 
 
 Additional Modules and Functionality
-    -hal_music - Script that uses a Spotify API in order to search for and play music
+    -hal_music - Script that uses a pafy and vlc in order to search for and play music from youtube
     -hal_alarm - Script for timers and alarms
     -hal_time - Gets the current time
     -hal_weather - script for providing the current weather for a given location
@@ -39,11 +39,11 @@ Additional Modules and Functionality
 To Do:
     -Set up timers and alarms
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
-    -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
     -Think about SDR? Or at least listening to streaming EmComm radio?
     -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -At the very end except statement, make Hal subprocess himself so he restarts again
+    -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
 
 '''
 
@@ -57,7 +57,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_alarm, hal_weather #Custom scripts Hal uses for completing tasks
+import hal_time, hal_weather #Custom scripts Hal uses for completing tasks
 import signal   # - Used for killing processes (music)
 import os   # - Used for OS related things
 
@@ -67,6 +67,7 @@ user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
+timer_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
 asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with "Im sorry, I just simply can't do that"
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
@@ -324,7 +325,7 @@ class harold:
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
         #Globals
-        global question_response, asshole_mode
+        global question_response, asshole_mode, stream_pid_list, timer_pid_list
 
         #Holds function specific values for Hal
         cursed_value = False
@@ -384,7 +385,7 @@ class harold:
                     #Pick a random insult and throw it at the user
                     self.respond(jokes[random.randrange(0, len(jokes), 1)])
 
-                #Start an alarm or timer
+                #Start an alarm or timer - SUBPROCESSED
                 if task == "alarm":
                     #For string manipulation and so we do not change the original question
                     user_in = user_question
@@ -897,7 +898,7 @@ class harold:
                     except:
                         question_response = "I'm sorry, there was an issue trying to get the weather either because the request timed out, there is no weather data for what you asked for, or the location you asked for was not clear. Please try again."
 
-                #Play music
+                #Play music - SUBPROCESSED
                 # IF threading will not work here, we will subprocess the hal_music script, get the PID when it starts so we can kill it. There will be no pausing it though
                 if task == "music":
                     #If the user just wants to hear music, randomly select a playlist for them
