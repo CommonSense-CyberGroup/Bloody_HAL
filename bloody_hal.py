@@ -456,7 +456,11 @@ class harold:
                                 weather_response = hal_weather.get_weather(weather_location)
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                                if int(weather_response[0] < 20):
+                                    question_response = f'It is cold as tits! The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                                
+                                else:
+                                    question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                             elif "tomorrow" in user_question:
                                 if " in " in user_question:
@@ -560,7 +564,11 @@ class harold:
                                 weather_response = hal_weather.get_forecast(weather_location, "Friday")
 
                                 #Pick out the current temp, and create the full response
-                                question_response = f'On Friday in {weather_location.split(",")[0]} the expected low is {weather_response[0]} degrees, and expected high is {weather_response[1]} degrees'
+                                if int(weather_response[0] < 20):
+                                    question_response = f'It is cold as tits! The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
+                                
+                                else:
+                                    question_response = f'The current temperature in {weather_location.split(",")[0]} is {weather_response[0]} degrees, and feels like {weather_response[1]} degrees'
 
                             else:
                                 if " in " in user_question:
@@ -907,6 +915,9 @@ class harold:
 
     #Function for responding to the user using TTS
     def respond(self, answer):
+        #Globals
+        global question_response
+        
         #Once we get the information from the action taken, set up the response and have Hal give it to the user
         self.engine.say(answer)
         self.engine.runAndWait()

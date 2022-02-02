@@ -211,3 +211,12 @@
 2022-02-01 14:58:30,574 - Bloody_Hal Log - INFO - User asked 'harold play cheat code' and Hal responded with 'It is 02:55 PM.'
 2022-02-01 14:58:48,552 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
 2022-02-01 15:07:13,953 - Bloody_Hal Log - INFO - User asked 'harold play hello' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2022-02-01 20:25:59,232 - Bloody_Hal Log - INFO - User asked 'harold what's the weather like outside' and Hal responded with 'Today, in Lakewood it is 22 degrees, feels like 16 degrees. The expected low is 23 and expected high is 37. Skies are Snow with 4 mile per hour winds, and 0 percent chance of precipitation'
+2022-02-01 20:26:59,087 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 20:38:15,149 - Bloody_Hal Log - INFO - User asked 'harold play cheat codes by bt asad' and Hal responded with 'I'm sorry, I didn't understand your question.'
+2022-02-01 20:39:02,651 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2022-02-01 21:10:32,247 - Bloody_Hal Log - INFO - User asked 'harold how cold is it out' and Hal responded with 'The current temperature in Lakewood is 22 degrees, and feels like 15 degrees'
+2022-02-01 21:10:57,711 - Bloody_Hal Log - INFO - User asked 'harold how cold is it in chicago' and Hal responded with 'The current temperature in chicago is 36 degrees, and feels like 30 degrees'
+2022-02-01 21:11:17,627 - Bloody_Hal Log - INFO - User asked 'harold how cold is it in anchorage' and Hal responded with 'The current temperature in anchorage is 16 degrees, and feels like 4 degrees'
+2022-02-01 21:12:20,566 - Bloody_Hal Log - INFO - User asked 'harold play what i've done' and Hal responded with 'The current temperature in anchorage is 16 degrees, and feels like 4 degrees'
+2022-02-01 21:12:25,160 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C

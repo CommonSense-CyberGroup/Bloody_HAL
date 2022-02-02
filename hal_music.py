@@ -14,9 +14,8 @@ License: MIT
 Purpose:
     -This script is used for streaming music off of youtube
     -VLC (same arch as installed python version) is required for this to work properly!
+    -This script will be subprocessed from the main script so it can be killed if the user asks for the music to stop
 
-To Do:
-    -Figure out how to find a playlist and play it (ie create personal playlists, and then randompy play one, or select one from the group)
 '''
 
 ### IMPORT LIBRARIES ###
@@ -24,11 +23,10 @@ import threading
 import pafy
 import vlc
 import re, urllib.parse, urllib.request
+import argparse
 
 ### CLASSES AND FUNCTIONS ###
 #Function that is called to kick off the thread to play the requested song/video
-def kicker(song):
-    threading.Thread(target=stream(song))
 
 #Function that is used to find the best quality audio on YouTube, and then play it using VLC. THREADED so it will continue until done, or main script kills it.
 def stream(name):
@@ -46,7 +44,18 @@ def stream(name):
     media = vlc.MediaPlayer(audio_url.url)  
     media.play()
 
-#For ad-hoc testing only
+### THE THING ###
 if __name__ == "__main__":
-    threading.Thread(target=stream(input("Search for a song: ")))
-    stream(input("Search for a song: "))  
+    #Set up the argument parsing so we can recieve what the user wants to play
+    parser = argparse.ArgumentParser()
+    required_args = parser.add_argument_group("required arguments")
+    required_args.add_argument("-s", dest="Song", required=True, type=str)  #Argument used for getting the song/playlist from the main script
+
+    args = parser.parse_args()
+
+    #Kick off the stream with the requested song/music
+    stream(args.Song)
+
+
+    #For ad-hoc testing only
+    #stream(input("Search for a song: "))
