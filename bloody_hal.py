@@ -57,7 +57,9 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_alarm, hal_weather, hal_music #Custom scripts Hal uses for completing tasks
+import hal_time, hal_alarm, hal_weather #Custom scripts Hal uses for completing tasks
+import signal   # - Used for killing processes (music)
+import os   # - Used for OS related things
 
 ### DEFINE VARIABLES ###
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
@@ -212,6 +214,14 @@ numbers = {
     "fifty seconds":"50 seconds",
     "fifty ":5,
 }
+
+#List of playlists to shuffle through when the user doesn't specify what they want to hear
+shuffle_music = [
+    "Demisaur BTSM",
+    "BTSM Red Rocks",
+    "It's Raining Men",
+    "I'm a Barbie Girl",
+]
 
 #Set up logging for user activities
 logging_file = "bloody_hal.log"         #Define log file location for windows
@@ -892,41 +902,63 @@ class harold:
                 if task == "music":
                     #If the user just wants to hear music, randomly select a playlist for them
                     if "play music" in user_question or "play something" in user_question:
-                        print()
+                        song = shuffle_music[random.randrange(0, len(shuffle_music), 1)]
+
+                        music_process = subprocess.Popen(['python hal_music.py -s ', song],shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).pid
+                        stream_pid_list.append(music_process)
+
                     
                     #User asks for a specific song by someone, we remove the 'by' and just search for what they asked
                     elif " by " in user_question:
                         song = user_question.split("play ")[1].replace(" by ", " ")
 
-                        hal_music.kicker(song)
+                        music_process = subprocess.Popen(['python hal_music.py -s ', song],shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).pid
+                        stream_pid_list.append(music_process)
 
                     #If the user asks to play something else
                     elif "play something else" in user_question or " next " in user_question:
-                        print()
+                        #If nothing is playing, insult the user
+                        if len(stream_pid_list) == 0:
+                            question_response = "Nothing is currently playing, are you deaf?"
+
+                        else:
+                            #Kill anything that is playing and remove the PID from the list
+                            for pid in stream_pid_list:
+                                os.kill(int(pid), signal.SIGTERM)
+                                stream_pid_list.remove(pid)
+
+                            #Call the music script with something else to play
+                            song = shuffle_music[random.randrange(0, len(shuffle_music), 1)]
+
+                            music_process = subprocess.Popen(['python hal_music.py -s ', song],shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).pid
+                            stream_pid_list.append(music_process)
 
                     #If the user wants us to stop the currently playing music
-                    elif " stop " in user_question:
-                        print()
-
-                    #If the user wants us to pause the currently playing music
-                    elif " pause " in user_question:
-                        print()
-
-                    #If the user wants is to resume what was playing. If nothing was playing, play something random
-                    #elif " play " in user_question:
-                        #print()
+                    elif " stop" in user_question:
+                        #Kill anything that is playing and remove it from the PID list
+                        for pid in stream_pid_list:
+                            os.kill(int(pid), signal.SIGTERM)
+                            stream_pid_list.remove(pid)
 
                     #Catch-all for if the user just requests something to be played
                     else:
                         song = user_question.split(" play ")[1]
 
-                        hal_music.kicker(song)
+                        if len(stream_pid_list) == 0:
+                            music_process = subprocess.Popen(['python hal_music.py -s ', song],shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).pid
+                            stream_pid_list.append(music_process)
+
+                        else:
+                            #Kill anything that is playing and remove the PID from the list
+                            for pid in stream_pid_list:
+                                os.kill(int(pid), signal.SIGTERM)
+                                stream_pid_list.remove(pid)
 
                 break
 
         #If Hal is in asshole mode, randomly not respond to the user with what they asked
         if asshole_mode:
-            if random.randrange(0, 10) % 2 == 0:
+            if random.randrange(0, 10, 1) % 2 == 0:
                 self.respond("I'm sorry, I just simply can't do that")
 
             else:
