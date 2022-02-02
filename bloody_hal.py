@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 2/1/2022
+Updated: 2/2/2022
 
 Version: 1.0.2
 
@@ -37,10 +37,7 @@ Additional Modules and Functionality
     -hal_smart - Script for interacting with smart devices using HomeAssistant (setup through config file, outside the scope of this project / documentation)
 
 To Do:
-    -Search for the current weather based on location (geopy?) and provide it to the user
-    -API calls to Spotify to play music (as well as let the user know what current song is playing when asked)
     -Set up timers and alarms
-    -Prevent Hal from hearing his own voice and using it as a question from the user
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Make a asshole mode? Where Hal will randomly respond "I just can't do that" when asked to do something - Can be changed in config / web app
     -Think about SDR? Or at least listening to streaming EmComm radio?
@@ -52,8 +49,7 @@ To Do:
 ### IMPORT LIBRARIES ###
 import logging      # - Used for logging of script activities. All modules log to the same log file
 import datetime     # - Used for getting current date and time
-import threading    # - Used for threading other functions and tasks
-from geopy import location    
+import subprocess    # - Used for subprocessing other functions and tasks
 import pyttsx3      # - Used for text to speech
 import random       # - Random number generator
 import queue        # - Used to hold words still needing to be processed by vosk
@@ -61,13 +57,13 @@ import sounddevice as sd    # - Used for getting the default sound devices (mic 
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
 import hal_time, hal_alarm, hal_weather, hal_music #Custom scripts Hal uses for completing tasks
-import time     # - Used for timing things and waiting
 
 ### DEFINE VARIABLES ###
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
 user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 voice_type = 0      #Place holder for voice Harold's voice type
+stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
@@ -917,7 +913,7 @@ class harold:
     def respond(self, answer):
         #Globals
         global question_response
-        
+
         #Once we get the information from the action taken, set up the response and have Hal give it to the user
         self.engine.say(answer)
         self.engine.runAndWait()

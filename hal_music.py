@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 2/1/2022
-Updated: 2/1/2022
+Updated: 2/2/2022
 
 Version: 1.0.1
 
@@ -19,7 +19,6 @@ Purpose:
 '''
 
 ### IMPORT LIBRARIES ###
-import threading
 import pafy
 import vlc
 import re, urllib.parse, urllib.request
