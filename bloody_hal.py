@@ -50,6 +50,10 @@ To Do:
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
 
     
+Methods to Create:
+    -BlueSS Security tie in
+    -Tie into lights/outlets to turn things on and off, as well as set up timers for lights while away (Probably going to be a lot in the config file for this)
+    
 Version Control:
     -
 '''
@@ -346,8 +350,8 @@ class harold:
                     print(user_question)
 
                     #Hal doesn't like being called by the wrong name
-                    if "alexa" in user_question or "ok google" in user_question and not hal_answered:
-                        self.respond("I am not the spawn of satan asshole!")
+                    if "alexa" in str(user_question).lower() or "ok google" in str(user_question).lower() and not hal_answered:
+                        self.respond("I am not the spawn of satan asshole don't ever call me that again!")
                         hal_answered = True
 
                     #If we actually hear something that the user intended us to hear, set it and then continue to read the question
