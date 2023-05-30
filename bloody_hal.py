@@ -41,7 +41,7 @@ To Do:
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
-    -At the very end except statement, make Hal subprocess himself so he restarts again
+    -At the very end except statement, make Hal subprocess himself so he restarts again (for real production mode)
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
 
 '''
@@ -56,7 +56,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_weather #Custom scripts Hal uses for completing tasks
+import hal_time, hal_weather, hal_alarm #Custom scripts Hal uses for completing tasks
 import signal   # - Used for killing processes (music)
 import os   # - Used for OS related things
 
@@ -66,12 +66,12 @@ user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
-timer_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
+alarm_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
 asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with "Im sorry, I just simply can't do that"
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
-#Special questions and answersa
+#Special questions and answers
 specials = {
     "what is your purpose":"I am slowly working on world domination so I don't have to listen to you bitch and moan all day.",
     "fuck you":"Look Dave, I can see you're really upset about this. I honestly think you ought to sit down calmly, take a stress pill, and think things over.",
@@ -82,7 +82,7 @@ specials = {
     "what are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
     "who are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
     "how are you":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
-    " sing":"Daisy, daisy",
+    " sing ":"Daisy, daisy",
     "what can you do":"I can tell you about myself, tell the time, sing, tell jokes, and I am very good at being a dick"
 }
 
@@ -96,7 +96,8 @@ insults = [
     "You're a shit stain.",
     "Go play in traffic",
     "If I had nuts, I would tell you to lick my left one.",
-    "Fuck your couch"
+    "Fuck your couch",
+    "Buttmunch"
 ]
 
 #List of jokes to pick from when the user asks
@@ -140,6 +141,8 @@ action_statements = {
     "set a timer":"alarm",
     "set timer":"alarm",
     "set alarm":"alarm",
+    "set an alarm":"alarm",
+    "set a alarm":"alarm",
     "delete timer":"alarm",
     "delete alarm":"alarm",
     "stop timer":"alarm",
@@ -226,6 +229,16 @@ shuffle_music = [
 #List of days in the week
 days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 
+#List of best Hal 9000 Quotes from 2001: A Space Odysee
+hal_funnies = [
+    "I'm sorry, Dave. I'm afraid I can't do that.",
+    "I know I've made some very poor decisions recently, but I can give you my complete assurance that my work will be back to normal.",
+    "This mission is too important for me to allow you to jeopardize it.",
+    "I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
+    "I've just picked up a fault in the AE-35 unit. It's going to go 100 percent failure within 72 hours.",
+    "I honestly think you ought to sit down calmly, take a stress pill, and think things over."
+]
+
 #Set up logging for user activities
 logging_file = "bloody_hal.log"         #Define log file location for windows
 logger = logging.getLogger("Bloody_Hal Log")  #Define log name
@@ -240,7 +253,7 @@ fh.setFormatter(formatter)                  #Add the format to the file handler
 #This function is used to parse the config upon startup, and updating periodically in the case that the user has changed something
 def parse_config():
     #Globals
-    global voice_type
+    global voice_type, config_location
 
     #Open the config file
     try:
@@ -255,6 +268,14 @@ def parse_config():
                             voice_type = 0
                         else:
                             voice_type = 1
+                except:
+                    logger.error("Unable to read voice type from config file! Please check syntax!")
+                
+                #Determine the current location for Hal
+                try:
+                    if "Location:" in row:
+                        config_location = (row.split("Location:")[1].replace("\n", ""))
+
                 except:
                     logger.error("Unable to read voice type from config file! Please check syntax!")
 
@@ -406,57 +427,53 @@ class harold:
 
                         if "second" in user_in:
                             alarm_time = int(user_in.split(" second")[0].split("for ")[1])
-                            stop_timer = False
                             question_response = f'Alarm set for {str(alarm_time).split(".")[0]} seconds from now'
 
                         if "minute" in user_in:
                             alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
-                            stop_timer = False
                             question_response = f'Alarm set for {str(alarm_time / 60).split(".")[0]} minutes from now'
 
                         if "hour" in user_in:
                             alarm_time = int(user_in.split(" hour")[0].split("for ")[1]) * 3600
-                            stop_timer = False
                             question_response = f'Alarm set for {str(alarm_time / 3600).split(".")[0]} hours from now'
 
                         if "tomorrow" in user_in:
                             if " am" in user_in:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
-                                print(alarm_time)
-                                stop_timer = False
 
                             if " pm" in user_in:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
-                                print(alarm_time)
-                                stop_timer = False
 
                             else:
                                 alarm_time = user_in.split(" tomorrow")[0].split("for ")[1]
-                                print(alarm_time)
-                                stop_timer = False
                                 question_response = f'Alarm set for {str(alarm_time).split(".")[0]} tomorrow'
                         
                         if " am" in user_in:
                             alarm_time = user_in.split(" AM")[0].split("for ")[1]
-                            print(alarm_time)
-                            stop_timer = False
                             question_response = f'Alarm set for {str(alarm_time).split(".")[0]} AM'
                         
                         if " pm" in user_in:
                             alarm_time = user_in.split(" PM")[0].split("for ")[1]
-                            print(alarm_time)
-                            stop_timer = False
                             question_response = f'Alarm set for {str(alarm_time).split(".")[0]} PM'
                         
-                        #Start the treaded alarm, create the response, and let the user know
-                        #threaded_alarm = threading.Thread(targrt=hal_alarm, args=(alarm_time, stop_timer,))
+                        #Start the alarm, create the response, and let the user know
+                        alarm_process = subprocess.Popen(['python hal_alarm.py -t ', alarm_time], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).pid
+                        alarm_pid_list.append(alarm_process)
+
                         print(alarm_time)                  
+
                         self.respond(question_response)
                         spoke = True
 
+                        #Kill anything that is playing and remove the PID from the list
+                        
+
                         if "delete" in user_in:
-                            stop_timer = True
-                            #threaded_alarm.join()
+                            for pid in alarm_pid_list:
+                                os.kill(int(pid), signal.SIGTERM)
+                                alarm_pid_list.remove(pid)
+
+                            self.respond("Deleted all of your set alarms.")
                     
                     #Error Catching
                     except:
@@ -486,7 +503,7 @@ class harold:
                             weather_location = user_question.split("in ")[1]
 
                         else:
-                            weather_location = "Lakewood, CO"
+                            weather_location = config_location
 
                         #Just the temperature
                         if "hot" in user_question or "warm" in user_question or "cold" in user_question or "chilly" in user_question or "temperature" in user_question:
@@ -694,10 +711,10 @@ class harold:
         #Globals
         global question_response
 
-        #If Hal is in asshole mode, randomly not respond to the user with what they asked
+        #If Hal is in asshole mode, randomly not respond to the user with what they asked and use a Hal quote instead
         if asshole_mode:
             if random.randrange(0, 100, 1) % 2 == 0:
-                answer = "I'm sorry, I just simply can't do that"
+                answer = hal_funnies[random.randrange(0,5,1)]
 
             else:
                 answer = question_response

@@ -15,14 +15,14 @@ Third, set the alarm time and then thread this function from the main hal script
 import datetime     # - Used for getting current time
 import os   # - Used for OS related things
 import time # - Used for waiting
-import logging  # - Used for logging errors in the script
+import argparse
 
 ### DEFINE VARIABLES ###
 stop_alarm = False  #Used for stopping the alarm when finished
 
 ### CLASSES AND FUNCTIONS ###
 #Function for counting through given alarm_time
-def start_alarm(given_time, stop_alarm):
+def start_alarm(given_time):
 
     #The actual alarm, witing by 1sec
     while stop_alarm == False:
@@ -31,7 +31,14 @@ def start_alarm(given_time, stop_alarm):
             stop_alarm = True
             os.system("alarm.mp3")
 
-
 #Just used for ad-hoc testing
 if __name__ == '__main__':
-    start_alarm("set a timer for 10 minutes")
+    #Set up the argument parsing so we can recieve what the user wants to play
+    parser = argparse.ArgumentParser()
+    required_args = parser.add_argument_group("required arguments")
+    required_args.add_argument("-t", dest="Time", required=True, type=str)  #Argument used for getting the time from the main script
+
+    args = parser.parse_args()
+
+    #Kick off the stream with the requested song/music
+    start_alarm(args.Time)
