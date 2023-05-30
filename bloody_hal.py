@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 2/2/2022
+Updated: 5/30/2023
 
 Version: 1.0.2
 
@@ -39,7 +39,6 @@ Additional Modules and Functionality
 To Do:
     -Set up timers and alarms
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
-    -Think about SDR? Or at least listening to streaming EmComm radio?
     -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -At the very end except statement, make Hal subprocess himself so he restarts again
@@ -115,6 +114,7 @@ jokes = [
 #List of curse words for Hal to detect in the users questions / statement
 curse_words = [
     "fuck",
+    "fucker",
     "shit",
     "bitch",
     "cunt",
@@ -122,12 +122,12 @@ curse_words = [
     "slut",
     "whore",
     "dipshit",
-    "prick",
+    " prick ",
     "douche",
     " hell ",
     "pussy",
     " dick ",
-    "cock"
+    " cock "
 ]
 
 #Dictionary of phrases Hal will look for in order to see if there is a question posed where he needs to take action
@@ -901,7 +901,7 @@ class harold:
                     except:
                         question_response = "I'm sorry, there was an issue trying to get the weather either because the request timed out, there is no weather data for what you asked for, or the location you asked for was not clear. Please try again."
 
-                #Play music - SUBPROCESSED
+                #Play music - SUBPROCESSED - How can we play a playlist or something in youtube?
                 # IF threading will not work here, we will subprocess the hal_music script, get the PID when it starts so we can kill it. There will be no pausing it though
                 if task == "music":
                     #If the user just wants to hear music, randomly select a playlist for them

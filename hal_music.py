@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 2/1/2022
-Updated: 2/2/2022
+Updated: 5/30/2023
 
 Version: 1.0.1
 
@@ -15,6 +15,9 @@ Purpose:
     -This script is used for streaming music off of youtube
     -VLC (same arch as installed python version) is required for this to work properly!
     -This script will be subprocessed from the main script so it can be killed if the user asks for the music to stop
+
+To Do:
+    -How can we play a number of songs in a row or similar without stopping?
 
 '''
 
@@ -28,7 +31,7 @@ import argparse
 #Function that is called to kick off the thread to play the requested song/video
 
 #Function that is used to find the best quality audio on YouTube, and then play it using VLC. THREADED so it will continue until done, or main script kills it.
-def stream(name):
+def yt_stream(name):
     #Create the string and use it to search YouTube for the song we want
     query_string = urllib.parse.urlencode({"search_query": name})
     formatUrl = urllib.request.urlopen("https://www.youtube.com/results?" + query_string)
@@ -53,7 +56,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #Kick off the stream with the requested song/music
-    stream(args.Song)
+    yt_stream(args.Song)
 
 
     #For ad-hoc testing only

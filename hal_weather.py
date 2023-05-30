@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/17/2021
-Updated: 2/1/2022
+Updated: 5/30/2023
 
 Version: 1.0.1
 
@@ -14,6 +14,9 @@ License: MIT
 Purpose:
     -This script is used for getting weather data from any given location that the user asks for
     -This script will be called from the main Bloody_Hal script as a function/class call
+
+To Do:
+    -Can we add a section for calling a wxUderground API to get exactly what the temp is at home? (only when the user asks for temp outside, or forecast that is NOT somewhere other than current location)
 '''
 
 ### IMPORT LIBRARIES ###
