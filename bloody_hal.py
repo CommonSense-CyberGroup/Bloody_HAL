@@ -374,7 +374,7 @@ class harold:
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
         #Globals
-        global question_response, asshole_mode, stream_pid_list, timer_pid_list
+        global question_response, asshole_mode, stream_pid_list, alarm_pid_list
 
         #Holds function specific values for Hal
         cursed_value = False
