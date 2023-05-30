@@ -148,6 +148,8 @@ action_statements = {
     "delete alarm":"alarm",
     "stop timer":"alarm",
     "stop alarm":"alarm",
+    "remove alarm":"alarm",
+    "remove timer":"alarm",
     "timers set":"alarm",
     "timers active":"alarm",
     "alarms set":"alarm",
@@ -432,6 +434,30 @@ class harold:
 
                         else:
                             pass
+                    
+                    #Try to delete any alarms
+                    if "delete" in user_question or "remove" in user_question or "stop" in user_question:
+                        if len(alarm_pid_list) < 1:
+                            if asshole_mode:
+                                self.respond("Idiot. There are no alarms to be deleted.")
+
+                            else:
+                                self.respond("You do not have any alarms set.")
+
+                            spoke = True
+                            return
+
+                        for pid in alarm_pid_list:
+                            try:
+                                os.kill(int(pid), signal.SIGTERM)
+                                alarm_pid_list.remove(pid)
+
+                            except:
+                                pass
+
+                        self.respond("Deleted all of your set alarms.")
+                        spoke = True
+                        return
 
                     #For string manipulation and so we do not change the original question
                     user_in = user_question
@@ -505,14 +531,6 @@ class harold:
 
                         self.respond(question_response)
                         spoke = True
-
-                        #Kill any alarms and remove the PID from the list
-                        if "delete" in user_in:
-                            for pid in alarm_pid_list:
-                                os.kill(int(pid), signal.SIGTERM)
-                                alarm_pid_list.remove(pid)
-
-                            self.respond("Deleted all of your set alarms.")
                     
                     #Error Catching
                     except:
@@ -693,13 +711,22 @@ class harold:
                     elif "play something else" in user_question or " next " in user_question:
                         #If nothing is playing, insult the user
                         if len(stream_pid_list) == 0:
-                            question_response = "Nothing is currently playing, are you deaf?"
+                            if asshole_mode:
+                                question_response = "Nothing is currently playing, are you deaf?"
+
+                            else:
+                                question_response = "There is currently nothing playing."
 
                         else:
                             #Kill anything that is playing and remove the PID from the list
-                            for pid in stream_pid_list:
-                                os.kill(int(pid), signal.SIGTERM)
-                                stream_pid_list.remove(pid)
+                            try:
+                                for pid in stream_pid_list:
+                                    os.kill(int(pid), signal.SIGTERM)
+                                    stream_pid_list.remove(pid)
+                            
+                            except Exception as e:
+                                logger.error("Unable to stop currently playing song to switch to another: %s : %s", sys.exc_info(), e)
+                                pass
 
                             #Call the music script with something else to play
                             song = shuffle_music[random.randrange(0, len(shuffle_music), 1)]
