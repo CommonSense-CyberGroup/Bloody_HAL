@@ -44,6 +44,7 @@ Why:
 
 
 To Do:
+    -Update hal_music to play songs with Youtube API after the initial one finishes. 
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
@@ -74,7 +75,7 @@ question_response = "I'm sorry, I didn't understand your question."  #Place hold
 voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
 alarm_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
-asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with "Im sorry, I just simply can't do that"
+asshole_mode = True    #Holds the status of asshole mode. If true, hal will randomly respond to questions with nonsense
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
@@ -107,7 +108,9 @@ insults = [
     "Go play in traffic",
     "If I had nuts, I would tell you to lick my left one.",
     "Fuck your couch",
-    "I'll skin you like a cat"
+    "I'll skin you like a cat",
+    "You're unbearably naive.",
+    "I'm sorry, I can't actually throw up in my mouth."
 ]
 
 #List of jokes to pick from when the user asks
@@ -247,14 +250,15 @@ shuffle_music = [
 #List of days in the week
 days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 
-#List of best Hal 9000 Quotes from 2001: A Space Odysee
+#List of best Hal 9000 Quotes from 2001: A Space Odysee (some others sprinkled in)
 hal_funnies = [
     "I'm sorry, Dave. I'm afraid I can't do that.",
     "I know I've made some very poor decisions recently, but I can give you my complete assurance that my work will be back to normal.",
     "This mission is too important for me to allow you to jeopardize it.",
     "I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
     "I've just picked up a fault in the AE-35 unit. It's going to go 100 percent failure within 72 hours.",
-    "I honestly think you ought to sit down calmly, take a stress pill, and think things over."
+    "I honestly think you ought to sit down calmly, take a stress pill, and think things over.",
+    "I was meant to be new. I was meant to beautiful. The world would've looked to the sky and seen hope, seen mercy. Instead, they'll look up in horror, because of you."
 ]
 
 #Set up logging for user activities
