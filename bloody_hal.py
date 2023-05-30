@@ -39,9 +39,7 @@ Additional Modules and Functionality
 To Do:
     -Set up timers and alarms
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
-    -Add "and" functionality into the timer (ie alarm for 2 hours and 30 minutes)
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
-    -At the very end except statement, make Hal subprocess himself so he restarts again (for real production mode)
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
 
 '''
@@ -56,7 +54,7 @@ import queue        # - Used to hold words still needing to be processed by vosk
 import sounddevice as sd    # - Used for getting the default sound devices (mic and speakers)
 import vosk     # - Used for speech recognition. Offline using pocket sphinx
 import sys      # - Used for system related things
-import hal_time, hal_weather, hal_alarm #Custom scripts Hal uses for completing tasks
+import hal_time, hal_weather #Custom scripts Hal uses for completing tasks
 import signal   # - Used for killing processes (music)
 import os   # - Used for OS related things
 
@@ -97,7 +95,7 @@ insults = [
     "Go play in traffic",
     "If I had nuts, I would tell you to lick my left one.",
     "Fuck your couch",
-    "Buttmunch"
+    "I'll skin you like a cat"
 ]
 
 #List of jokes to pick from when the user asks
@@ -426,16 +424,34 @@ class harold:
                                 user_in = user_in.replace(n_text, str(n_num))
 
                         if "second" in user_in:
-                            alarm_time = int(user_in.split(" second")[0].split("for ")[1])
-                            question_response = f'Alarm set for {str(alarm_time).split(".")[0]} seconds from now'
+                                alarm_time = int(user_in.split(" second")[0].split("for ")[1])
+                                question_response = f'Alarm set for {str(alarm_time).split(".")[0]} seconds from now'
 
                         if "minute" in user_in:
-                            alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
-                            question_response = f'Alarm set for {str(alarm_time / 60).split(".")[0]} minutes from now'
+                                alarm_time = int(user_in.split(" minute")[0].split("for ")[1]) * 60
+                                question_response = f'Alarm set for {str(alarm_time / 60).split(".")[0]} minutes from now'
+
+                                if " and " in user_in:
+                                    alarm_time += int(user_in.split(" and ")[1].split(" ")[0])
+                                    question_response = f'Alarm set for {user_in.split(" minute")[0].split("for ")[1]} minutes and {user_in.split(" and ")[1].split(" ")[0]} seconds from now'
 
                         if "hour" in user_in:
-                            alarm_time = int(user_in.split(" hour")[0].split("for ")[1]) * 3600
+                            alarm_time = int(user_in.split(" hour")[0].strip().split(" ")[-1]) * 3600
                             question_response = f'Alarm set for {str(alarm_time / 3600).split(".")[0]} hours from now'
+
+                            if " and " in user_in.split(" hour")[1].strip():
+                                if "minute" in user_in.split(" hour")[1].split(" and ")[1].split(" "[1]):
+                                    alarm_time += (int(user_in.split(" hour")[1].split(" and ")[1].split(" "[0])) * 60)
+                                    question_response = f'Alarm set for {user_in.split(" hour")[0].strip().split(" ")[-1]} hours and {user_in.split(" hour")[1].split(" and ")[1].split(" "[0])} minutes from now'
+
+                                if "second" in user_in.split(" hour")[1].split(" and ")[1].split(" "[1]):
+                                    alarm_time = int(user_in.split(" hour")[1].split(" and ")[1].split(" "[0]))
+                                    question_response = f'Alarm set for {user_in.split(" hour")[0].strip().split(" ")[-1]} hours and {user_in.split(" hour")[1].split(" and ")[1].split(" "[0])} seconds from now'
+
+                                if " and " in len(user_in.split(" hour")[1].split(" and ")) >= 3:
+                                    if "second" in user_in.split(" hour")[1].split(" and ")[2]:
+                                        alarm_time += int(user_in.split(" hour")[1].split(" and ")[2].split(" "[0]))
+                                        question_response += f' and {user_in.split(" hour")[1].split(" and ")[2].split(" "[0])} seconds from now.'
 
                         if "tomorrow" in user_in:
                             if " am" in user_in:
@@ -733,14 +749,16 @@ class harold:
         
 ### THE THING ###
 if __name__ == '__main__':
-    try:        
-        #Initilize Hal
-        harold()
-        logger.info("Harold successfully started!")
-        
-    except KeyboardInterrupt:
-        logger.info("User quit the script with Ctrl-C")
-        quit()
+    while True:
+        try:        
+            #Initilize Hal
+            harold()
+            logger.info("Harold successfully started!")
+            
+        except KeyboardInterrupt:
+            logger.info("User quit the script with Ctrl-C")
+            quit()
 
-    #except:
-        logger.critical("Unknown error caused Harold to crash: %s", sys.exc_info())
+        except Exception as e:
+            logger.critical("Unknown error caused Harold to crash: %s :%s", sys.exc_info(), e)
+            pass
