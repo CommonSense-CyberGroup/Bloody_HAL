@@ -29,7 +29,7 @@ Considerations:
 
 
 Additional Modules and Functionality
-    -hal_music - Script that uses a pafy and vlc in order to search for and play music from youtube
+    -hal_music - Script that uses pafy and vlc in order to search for and play music from youtube
     -hal_alarm - Script for timers and alarms
     -hal_time - Gets the current time
     -hal_weather - script for providing the current weather for a given location
@@ -42,6 +42,9 @@ To Do:
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
 
+    
+Version Control:
+    -
 '''
 
 ### IMPORT LIBRARIES ###
@@ -145,6 +148,12 @@ action_statements = {
     "delete alarm":"alarm",
     "stop timer":"alarm",
     "stop alarm":"alarm",
+    "timers set":"alarm",
+    "timers active":"alarm",
+    "alarms set":"alarm",
+    "alarms active":"alarm",
+    "active timer":"alarm",
+    "active alarm":"alarm",
 
     #Time
     "time is it in":"time",
@@ -408,6 +417,22 @@ class harold:
 
                 #Start an alarm or timer - SUBPROCESSED
                 if task == "alarm":
+                    #Look to see if there are any active timers or alarms
+                    for ask in ["timers set", "timers active", "alarms set", "alarms active", "active timer", "active alarm"]:
+                        if ask in user_question:
+                            if len(alarm_pid_list) == 1:
+                                self.respond("There is one alarm currently set.")
+                                spoke = True
+                                return
+
+                            else:
+                                self.respond(f'There are {len(alarm_pid_list)} alarms currently set.')
+                                spoke = True
+                                return
+
+                        else:
+                            pass
+
                     #For string manipulation and so we do not change the original question
                     user_in = user_question
 
@@ -481,9 +506,7 @@ class harold:
                         self.respond(question_response)
                         spoke = True
 
-                        #Kill anything that is playing and remove the PID from the list
-                        
-
+                        #Kill any alarms and remove the PID from the list
                         if "delete" in user_in:
                             for pid in alarm_pid_list:
                                 os.kill(int(pid), signal.SIGTERM)
