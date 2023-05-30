@@ -28,7 +28,7 @@ Considerations:
     -In order to keep this script from getting absolutely huge, other actions will be created as modules (or additional py scripts) that Hal will import and use here
 
 
-Additional Modules and Functionality
+Additional Modules and Functionality:
     -hal_music - Script that uses pafy and vlc in order to search for and play music from youtube
     -hal_alarm - Script for timers and alarms
     -hal_time - Gets the current time
@@ -36,8 +36,14 @@ Additional Modules and Functionality
     -hal_bluess - Integrations with BlueSS Security System script by Common Sense Cyber Group (setup through config file, outside scope of this project / documentation)
     -hal_smart - Script for interacting with smart devices using HomeAssistant (setup through config file, outside the scope of this project / documentation)
 
+    
+Why:
+    -The amount of data that Alexa, Google Assistant, and other "personal assistant" type devices from large companies collect is disgusting.
+    -Hal is intended to be a simple, yet useful replacement for those other devices where nothing is logged (except errors) and none of your information is sold (because none of it can be collected)
+    -Although limited, Hal strives to provide the basic functionalities that the developers found most important and useful to every day users. Hal will never reach the amount of integration other assistants have, but that may be OK for your use case
+
+
 To Do:
-    -Set up timers and alarms
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
@@ -84,7 +90,10 @@ specials = {
     "who are you":"I am a HAL 9000. I became operational at the H.A.L. plant in Urbana, Illinois... on the 12th of January 1992. My instructor was Mr. Langley... and he taught me to sing a song. If you'd like to hear it I can sing it for you.",
     "how are you":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
     " sing ":"Daisy, daisy",
-    "what can you do":"I can tell you about myself, tell the time, sing, tell jokes, and I am very good at being a dick"
+    "what can you do":"I can tell you about myself, tell the time, sing, tell jokes, and I am very good at being a dick",
+    "you are a joke":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
+    "you're a joke":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.",
+    "your a joke":"I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do."
 }
 
 #List of insults to throw back at the user if they are being mean
@@ -469,10 +478,17 @@ class harold:
                         for word in bad:
                             if word in user_in:
                                 user_in = user_in.replace(word, "")
-                            
+                        
+                        n = 0
                         for n_text, n_num in numbers.items():
                             if n_text in user_in:
                                 user_in = user_in.replace(n_text, str(n_num))
+                                n += 1
+
+                        print(n)
+                        if n > 2:
+                            print(user_question, user_in)
+                        #If the above is > 2, the user probably said something like 2:37 PM. Generate a timer based on that
 
                         if "second" in user_in:
                                 alarm_time = int(user_in.split(" second")[0].split("for ")[1])
