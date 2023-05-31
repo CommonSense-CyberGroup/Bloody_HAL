@@ -25,7 +25,7 @@ from timezonefinder import TimezoneFinder   # - Used for mapping coordinates to 
 import pytz     # - Used for setting a timezone to search the current time in
 import ssl      # - SSL encryption during API call
 import sys      # - System related activities
-import logging
+import logging # - Used for error logging
 
 ### DEFINE VARIABLES ###
 #Set the SSL context (rather remove TLS)

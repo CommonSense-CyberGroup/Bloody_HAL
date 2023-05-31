@@ -15,8 +15,8 @@ Third, set the alarm time and then thread this function from the main hal script
 import datetime     # - Used for getting current time
 import os   # - Used for OS related things
 import time # - Used for waiting
-import argparse
-import logging
+import argparse # - Used for getting script arguments passed in
+import logging # - Used for error logging
 
 ### DEFINE VARIABLES ###
 stop_alarm = False  #Used for stopping the alarm when finished

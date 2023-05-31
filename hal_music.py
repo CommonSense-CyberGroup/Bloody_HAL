@@ -22,11 +22,11 @@ To Do:
 '''
 
 ### IMPORT LIBRARIES ###
-import pafy
-import vlc
-import re, urllib.parse, urllib.request
-import argparse
-import logging
+import pafy # - Used for grabbing URLs of YouTube songs
+import vlc # - Used for playing audio from a YouTube URL
+import re, urllib.parse, urllib.request # - Used for regex and url related items
+import argparse # - Used for getting script arguments passed in
+import logging # - Used for error logging
 
 
 ### DEFINE VARIABLES ###
