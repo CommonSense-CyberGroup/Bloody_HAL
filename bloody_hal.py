@@ -5,7 +5,7 @@ BY:
     Common Sense Cyber Group
 
 Created: 12/7/2021
-Updated: 5/30/2023
+Updated: 5/31/2023
 
 Version: 1.0.2
 
@@ -50,6 +50,7 @@ To Do:
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
     -How can we make Hal faster?
+    -Different voice for Hal? Or way to have him speak?
     
 Methods to Create:
     -BlueSS Security tie in
