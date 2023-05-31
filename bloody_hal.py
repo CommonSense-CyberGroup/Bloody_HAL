@@ -44,10 +44,12 @@ Why:
 
 
 To Do:
+    -Rewrite weather to use wxunderground
     -Update hal_music to play songs with Youtube API after the initial one finishes. 
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
+    -How can we make Hal faster?
     
 Methods to Create:
     -BlueSS Security tie in
@@ -72,7 +74,8 @@ import signal   # - Used for killing processes (music)
 import os   # - Used for OS related things
 
 ### DEFINE VARIABLES ###
-wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
+wake_word1 = "Harold"    #We do our own wake word listening. This is what we listen for
+wake_word2 = "Herald"    #We do our own wake word listening. This is what we listen for
 user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
@@ -150,7 +153,7 @@ action_statements = {
     "asshole ":"asshole",
 
     #Debug mode
-    "debug ":"debug",
+    "debug":"debug",
 
     #Alarm
     "set an alarm":"alarm",
@@ -317,7 +320,7 @@ def parse_config():
                 #Set the debug mode
                 try:
                     if "debug:" in row:
-                        debug_mode = bool(row.split("debug:")[1].replace("\n", ""))
+                        debug_mode = bool(str(row.split("debug:")[1].replace("\n", "")))
 
                 except:
                     logger.error("Unable to read the debug mode from config file! Please check syntax!")
@@ -325,7 +328,7 @@ def parse_config():
                 #Set the asshole mode
                 try:
                     if "asshole:" in row:
-                        asshole_mode = bool(row.split("asshole:")[1].replace("\n", ""))
+                        asshole_mode = bool(str(row.split("asshole:")[1].replace("\n", "")))
 
                 except:
                     logger.error("Unable to read the asshole mode from config file! Please check syntax!")
@@ -383,21 +386,23 @@ class harold:
                         hal_answered = True
 
                     #If we actually hear something that the user intended us to hear, set it and then continue to read the question
-                    if len(user_question) > len(wake_word) and wake_word.lower() in user_question and not hal_answered:
+                    if len(user_question) > len(wake_word1):
+                        if wake_word1.lower() in user_question or wake_word2.lower() in user_question:
+                            if not hal_answered:
 
-                        #Case for special sayings and questions
-                        for question, answer in specials.items():
-                            if question in user_question:
-                                self.respond(answer)
-                                hal_answered = True
-                        
-                        #If there isn't a special saying in what the user said, move on to interpret what they said
-                        if not hal_answered:
-                            self.read_question()
-                            hal_answered = True
+                                #Case for special sayings and questions
+                                for question, answer in specials.items():
+                                    if question in user_question:
+                                        self.respond(answer)
+                                        hal_answered = True
+                                
+                                #If there isn't a special saying in what the user said, move on to interpret what they said
+                                if not hal_answered:
+                                    self.read_question()
+                                    hal_answered = True
 
-                    else:
-                        user_question = ""
+                            else:
+                                user_question = ""
 
     #Function for reading the question that was posed to the user to respond and/or take action
     def read_question(self):
@@ -847,7 +852,7 @@ class harold:
 
         #If Hal is in asshole mode, randomly not respond to the user with what they asked and use a Hal quote instead
         if asshole_mode:
-            if random.randrange(0, 100, 1) % 2 == 0:
+            if random.randrange(0, 1000, 1) % 2 == 0:
                 answer = hal_funnies[random.randrange(0,5,1)]
 
             else:
