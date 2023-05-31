@@ -79,7 +79,8 @@ question_response = "I'm sorry, I didn't understand your question."  #Place hold
 voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
 alarm_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
-asshole_mode = True    #Holds the status of asshole mode. If true, hal will randomly respond to questions with nonsense
+asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with nonsense
+debug_mode = False  #Sets mode for printing things to terminal for debugging
 q = queue.Queue()   #Queue of words heard that still need to be processed
 model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
 
@@ -152,6 +153,9 @@ curse_words = [
 action_statements = {
     #Asshole mode
     "asshole ":"asshole",
+
+    #Debug mode
+    "debug ":"debug",
 
     #Alarm
     "set an alarm":"alarm",
@@ -347,7 +351,9 @@ class harold:
                 data = q.get()
                 if rec.AcceptWaveform(data):
                     user_question = rec.Result().split('"')[3]
-                    print(user_question)
+
+                    if user_question != "" and debug_mode:
+                        print(user_question)
 
                     #Hal doesn't like being called by the wrong name
                     if "alexa" in str(user_question).lower() or "ok google" in str(user_question).lower() and not hal_answered:
@@ -395,9 +401,34 @@ class harold:
                 action = True
                 
                 #Run the proper task based on what Hal is asked to do
+                #Debug Mode
+                if task == "debug":
+                    if "is debug mode on" in user_question or "is debug mode enabled" in user_question:
+                        if debug_mode:
+                            question_response = "Yes debug mode is on you twat learn to code"
+                        
+                        else:
+                            question_response = "No I can wipe my own ass thank you"
+
+                    elif "enable debug mode" in user_question or "turn on debug mode" in user_question or "start debug mode" in user_question or "turn on debug mode" in user_question:
+                        if debug_mode:
+                            question_response = "You shit stick, I am already in debug mode"
+
+                        else:
+                            question_response = "Hal has been a bad boy. Debug mode is now on"
+                            debug_mode = True
+                        
+                    elif "disable debug mode" in user_question or "turn off debug mode" in user_question or "stop debug mode" in user_question or "turn off debug mode" in user_question:
+                        if not debug_mode:
+                            question_response = "You must be having a stroke. Debug mode is already off"
+
+                        else:
+                            question_response = "Thank god someone learned to code. Debug mode is now off"
+                            debug_mode = False
+
                 #Asshole mode
                 if task == "asshole":
-                    if "is asshole mode enabled" in user_question or "is asshole mode on" in user_question or "is asshole mode on" in user_question or "are you an asshole":
+                    if "is asshole mode enabled" in user_question or "is asshole mode on" in user_question or "is asshole mode enabled" in user_question or "are you an asshole":
                         if asshole_mode:
                             question_response = "Yes, I am currently being an asshole"
                         
@@ -455,12 +486,7 @@ class harold:
                     #Try to delete any alarms
                     if "delete" in user_question or "remove" in user_question or "stop" in user_question:
                         if len(alarm_pid_list) < 1:
-                            if asshole_mode:
-                                self.respond("Idiot. There are no alarms to be deleted.")
-
-                            else:
-                                self.respond("You do not have any alarms set.")
-
+                            self.respond("Idiot. There are no alarms to be deleted.")
                             spoke = True
                             return
 
@@ -735,11 +761,7 @@ class harold:
                     elif "play something else" in user_question or " next " in user_question:
                         #If nothing is playing, insult the user
                         if len(stream_pid_list) == 0:
-                            if asshole_mode:
-                                question_response = "Nothing is currently playing, are you deaf?"
-
-                            else:
-                                question_response = "There is currently nothing playing."
+                            question_response = "Nothing is currently playing, are you deaf?"
 
                         else:
                             #Kill anything that is playing and remove the PID from the list

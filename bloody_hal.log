@@ -239,3 +239,21 @@
 2022-02-02 13:27:58,624 - Bloody_Hal Log - INFO - User asked 'harold stop being an asshole' and Hal responded with 'I'm sorry, I didn't understand your question.'
 2022-02-02 13:28:07,905 - Bloody_Hal Log - INFO - User asked 'harold turnoff asshole moon' and Hal responded with 'I'm sorry, I didn't understand your question.'
 2022-02-02 13:28:21,114 - Bloody_Hal Log - INFO - User asked 'harold disable asshole' and Hal responded with 'I'm sorry, I just simply can't do that'
+2022-02-09 22:18:35,816 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2023-05-30 18:52:56,645 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'xml.parsers.expat.ExpatError'>, ExpatError('mismatched tag: line 4, column 2'), <traceback object at 0x000001CBD9E51440>)
+2023-05-30 18:54:07,327 - Bloody_Hal Log - INFO - User asked 'harold what time is it i'm sorry this is on such short notice' and Hal responded with 'It is 06:54 PM.'
+2023-05-30 18:54:16,085 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2023-05-30 19:32:02,946 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'xml.parsers.expat.ExpatError'>, ExpatError('mismatched tag: line 4, column 2'), <traceback object at 0x0000027C77C63380>)
+2023-05-30 19:33:08,165 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'I'm sorry, Dave. I'm afraid I can't do that.'
+2023-05-30 19:33:35,138 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'I've just picked up a fault in the AE-35 unit. It's going to go 100 percent failure within 72 hours.'
+2023-05-30 19:33:44,222 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 07:33 PM.'
+2023-05-30 19:33:51,001 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
+2023-05-30 19:36:51,368 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 07:36 PM.'
+2023-05-30 19:37:06,024 - Bloody_Hal Log - INFO - User asked 'harold what time is it in chicago illinois' and Hal responded with 'It is 08:37 PM in chicago illinois.'
+2023-05-30 19:37:35,619 - Bloody_Hal Log - INFO - User asked 'harold what's the temperature outside' and Hal responded with 'I'm sorry, there was an issue trying to get the weather either because the request timed out, there is no weather data for what you asked for, or the location you asked for was not clear. Please try again.'
+2023-05-30 19:38:05,443 - Bloody_Hal Log - INFO - User asked 'harold set a timer for one minute' and Hal responded with 'Sorry, I couldn't understand when you wanted to set an alarm for.'
+2023-05-30 19:51:51,620 - Hal_Weather Log - CRITICAL - Unable to get weather data: (<class 'xml.parsers.expat.ExpatError'>, ExpatError('mismatched tag: line 4, column 2'), <traceback object at 0x000001AA319D3B00>)
+2023-05-30 19:53:08,796 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 07:53 PM.'
+2023-05-30 19:53:48,655 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'UnboundLocalError'>, UnboundLocalError("local variable 'debug_mode' referenced before assignment"), <traceback object at 0x000001AA40E52C80>) :local variable 'debug_mode' referenced before assignment
+2023-05-30 19:54:01,338 - Bloody_Hal Log - INFO - User asked 'harold what time is it' and Hal responded with 'It is 07:53 PM.'
+2023-05-30 19:55:22,547 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
