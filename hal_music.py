@@ -26,10 +26,21 @@ import pafy
 import vlc
 import re, urllib.parse, urllib.request
 import argparse
+import logging
+
+
+### DEFINE VARIABLES ###
+#Set up logging for user activities
+logging_file = "bloody_hal.log"         #Define log file location for windows
+logger = logging.getLogger("Hal_Music Log")  #Define log name
+logger.setLevel(logging.DEBUG)              #Set logger level
+fh = logging.FileHandler(logging_file)      #Set the file handler for the logger
+fh.setLevel(logging.DEBUG)                  #Set the file handler log level
+logger.addHandler(fh)                       #Add the file handler to logging
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')   #Format how the log messages will look
+fh.setFormatter(formatter)                  #Add the format to the file handler
 
 ### CLASSES AND FUNCTIONS ###
-#Function that is called to kick off the thread to play the requested song/video
-
 #Function that is used to find the best quality audio on YouTube, and then play it using VLC. THREADED so it will continue until done, or main script kills it.
 def yt_stream(name):
     #Create the string and use it to search YouTube for the song we want

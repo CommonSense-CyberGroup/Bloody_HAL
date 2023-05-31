@@ -25,6 +25,7 @@ from timezonefinder import TimezoneFinder   # - Used for mapping coordinates to 
 import pytz     # - Used for setting a timezone to search the current time in
 import ssl      # - SSL encryption during API call
 import sys      # - System related activities
+import logging
 
 ### DEFINE VARIABLES ###
 #Set the SSL context (rather remove TLS)
@@ -34,6 +35,16 @@ ctx.verify_mode = ssl.CERT_NONE
 geocoders.options.default_ssl_context = ctx
 
 geolocator = geopy.Nominatim(user_agent="hal_time_geoapi")    #Locator to do the work
+
+#Set up logging for user activities
+logging_file = "bloody_hal.log"         #Define log file location for windows
+logger = logging.getLogger("Hal_Time Log")  #Define log name
+logger.setLevel(logging.DEBUG)              #Set logger level
+fh = logging.FileHandler(logging_file)      #Set the file handler for the logger
+fh.setLevel(logging.DEBUG)                  #Set the file handler log level
+logger.addHandler(fh)                       #Add the file handler to logging
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')   #Format how the log messages will look
+fh.setFormatter(formatter)                  #Add the format to the file handler
 
 #Set up logging for user activities
 logging_file = "bloody_hal.log"         #Define log file location for windows

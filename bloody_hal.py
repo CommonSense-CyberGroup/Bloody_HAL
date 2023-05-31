@@ -48,7 +48,6 @@ To Do:
     -When playing music, how can we turn down the music, make a response, and then do something? or turn down the music if we tell that a user is asking a question
     -Fix timer so it will work if someone asks for an alarm like '2:37 PM'
     -We are going to have a bunch of stuff to test with the music playing. Helpful on looking for and killing processes - https://stackoverflow.com/questions/4214773/kill-process-with-python
-
     
 Methods to Create:
     -BlueSS Security tie in
@@ -76,13 +75,10 @@ import os   # - Used for OS related things
 wake_word = "Harold"    #We do our own wake word listening. This is what we listen for
 user_question = ""  #Used for holding the question the user asks Hal
 question_response = "I'm sorry, I didn't understand your question."  #Place holder for the answer to the action/question that the user had
-voice_type = 0      #Place holder for voice Harold's voice type
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
 alarm_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
-asshole_mode = False    #Holds the status of asshole mode. If true, hal will randomly respond to questions with nonsense
-debug_mode = False  #Sets mode for printing things to terminal for debugging
 q = queue.Queue()   #Queue of words heard that still need to be processed
-model = vosk.Model("C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model")
+model = "C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model"
 
 #Special questions and answers
 specials = {
@@ -180,6 +176,8 @@ action_statements = {
     #Time
     "time is it in":"time",
     "time is it":"time",
+    "what's the time":"time",
+    "what time":"time",
 
     #Music
     " play music":"music",
@@ -283,7 +281,7 @@ fh.setFormatter(formatter)                  #Add the format to the file handler
 #This function is used to parse the config upon startup, and updating periodically in the case that the user has changed something
 def parse_config():
     #Globals
-    global voice_type, config_location
+    global voice_type, config_location, model, debug_mode, asshole_mode
 
     #Open the config file
     try:
@@ -303,11 +301,27 @@ def parse_config():
                 
                 #Determine the current location for Hal
                 try:
-                    if "Location:" in row:
-                        config_location = (row.split("Location:")[1].replace("\n", ""))
+                    if "location:" in row:
+                        config_location = str(row.split("location:")[1].replace("\n", ""))
 
                 except:
-                    logger.error("Unable to read voice type from config file! Please check syntax!")
+                    logger.error("Unable to read location from config file! Please check syntax!")
+
+                #Set the debug mode
+                try:
+                    if "debug:" in row:
+                        debug_mode = bool(row.split("debug:")[1].replace("\n", ""))
+
+                except:
+                    logger.error("Unable to read the debug mode from config file! Please check syntax!")
+
+                #Set the asshole mode
+                try:
+                    if "asshole:" in row:
+                        asshole_mode = bool(row.split("asshole:")[1].replace("\n", ""))
+
+                except:
+                    logger.error("Unable to read the asshole mode from config file! Please check syntax!")
 
     except:
         logger.critical("Unable to open config file! Using default values.")
@@ -845,11 +859,13 @@ class harold:
         
 ### THE THING ###
 if __name__ == '__main__':
+    #Parse the config before startup
+    parse_config()
+
     while True:
         try:        
             #Initilize Hal
             harold()
-            logger.info("Harold successfully started!")
             
         except KeyboardInterrupt:
             logger.info("User quit the script with Ctrl-C")
