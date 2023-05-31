@@ -78,7 +78,6 @@ question_response = "I'm sorry, I didn't understand your question."  #Place hold
 stream_pid_list = []    #List holding the PID of the subprocess that is currently streaming music
 alarm_pid_list = []     #List holding the PID of the subprocess that is currently running a timer or alarm
 q = queue.Queue()   #Queue of words heard that still need to be processed
-model = "C:\\Users\\Scott\\Desktop\\Scripting\\SENS\\Archive\\Voice Models\\model"
 
 #Special questions and answers
 specials = {
@@ -293,9 +292,9 @@ def parse_config():
                 try:
                     if "voice:" in row:
                         if (row.split("voice:")[1].replace("\n", "")).lower() == "female":
-                            voice_type = 0
-                        else:
                             voice_type = 1
+                        else:
+                            voice_type = 0
                 except:
                     logger.error("Unable to read voice type from config file! Please check syntax!")
                 
@@ -306,6 +305,14 @@ def parse_config():
 
                 except:
                     logger.error("Unable to read location from config file! Please check syntax!")
+
+                #Locate the Vosk model
+                try:
+                    if "vosk:" in row:
+                        model = vosk.Model(str(row.split("vosk:")[1].replace("\n", "")))
+
+                except:
+                    logger.error("Unable to read Vosk model location from config file! Please check syntax!")
 
                 #Set the debug mode
                 try:
@@ -352,7 +359,8 @@ class harold:
 
         #Set up the mic device for listening
         device_info = sd.query_devices(None, 'input')
-        samplerate = int(device_info['default_samplerate'])
+        #samplerate = int(device_info['default_samplerate'])
+        samplerate = 48000
 
         #Data stream for recording with the system default mic and puttng it in the queue using a seperate channel
         with sd.RawInputStream(samplerate, blocksize = 8000, device = None, dtype='int16',
