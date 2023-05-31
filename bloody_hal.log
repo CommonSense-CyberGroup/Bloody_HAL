@@ -1,2 +1,0 @@
-2023-05-30 20:21:10,208 - Bloody_Hal Log - CRITICAL - Unknown error caused Harold to crash: (<class 'AttributeError'>, AttributeError("'str' object has no attribute '_handle'"), <traceback object at 0x00000235B4243D00>) :'str' object has no attribute '_handle'
-2023-05-30 20:21:10,375 - Bloody_Hal Log - INFO - User quit the script with Ctrl-C
